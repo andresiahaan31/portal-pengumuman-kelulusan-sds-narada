@@ -157,15 +157,15 @@
         </section>
 
         <section id="view-login" class="w-full hidden animate__animated animate__zoomIn card-main rounded-2xl shadow-2xl p-6 md:p-8 max-w-md mx-auto">
-            <h2 class="text-base md:text-lg font-bold text-white text-center mb-1">Login Portal Kelulusan</h2>
-            <p class="text-xs text-slate-400 text-center mb-6">Masukkan NIS & Password</p>
+            <h2 class="text-base md:text-lg font-bold text-white text-center mb-1">Masuk Portal Kelulusan</h2>
+            <p class="text-xs text-slate-400 text-center mb-6">Masukkan NIS & Password dari Wali Kelas</p>
             <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1.5">Nomor Induk Siswa (NIS)</label>
                     <input type="text" id="loginNis" required class="w-full input-field rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 12345">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Kata Sandi / Password</label>
                     <input type="password" id="loginPassword" required class="w-full input-field rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md transition-all mt-2 cursor-pointer">Periksa Hasil Kelulusan</button>
@@ -286,14 +286,14 @@
                 
                 <div class="flex justify-end gap-2 border-t pt-4">
                     <button type="button" onclick="closeModalSiswa()" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-md cursor-pointer">Simpan</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-md cursor-pointer">Simpan Data</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        let targetCountdownDate = new Date("Jun 02, 2026 10:00:00").getTime();
+        let targetCountdownDate = new Date("Jun 15, 2026 10:00:00").getTime();
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
 
@@ -403,14 +403,14 @@
             const nis = document.getElementById('loginNis').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             db.ref('siswa').orderByChild('nis').equalTo(nis).once('value').then((snapshot) => {
-                if(!snapshot.exists()) return showNotification("Data siswa tidak ditemukan!", "error");
+                if(!snapshot.exists()) return showNotification("Siswa tidak ditemukan!", "error");
                 let siswaData = null;
                 snapshot.forEach((child) => {
                     if(String(child.val().password) === password) {
                         siswaData = child.val();
                     }
                 });
-                if(!siswaData) return showNotification("NIS atau Password salah!", "error");
+                if(!siswaData) return showNotification("Kombinasi NIS & Kata Sandi salah!", "error");
                 showNotification(`Selamat Datang, ${siswaData.nama}`);
                 renderHasilSiswaCard(siswaData);
                 switchView('result');
@@ -445,42 +445,43 @@
                         <h3 class="text-sm font-bold text-white tracking-wide uppercase line-clamp-2">${s.nama}</h3>
                         <div class="w-full border-t border-white/10 my-3"></div>
                         <div class="text-left w-full space-y-2 text-[11px] text-slate-300">
+                            <div><span class="text-slate-500 font-medium block">Tempat, Tanggal Lahir:</span><span class="font-semibold text-slate-200">${s.ttl || '-'}</span></div>
                             <div><span class="text-slate-500 font-medium block">Nomor Induk Siswa:</span><span class="font-semibold text-white">${s.nis}</span></div>
                             <div><span class="text-slate-500 font-medium block">NISN:</span><span class="font-semibold text-white">${s.nisn || '-'}</span></div>
                             <div><span class="text-slate-500 font-medium block">Kelas:</span><span class="font-semibold text-white">${s.kelas || '-'}</span></div>
-                            <div><span class="text-slate-500 font-medium block">Tempat, Tanggal Lahir:</span><span class="font-semibold text-slate-200">${s.ttl || '-'}</span></div>
                         </div>
                     </div>
 
                     <div class="md:col-span-8 space-y-4">
                         
                         <div class="bg-slate-900/40 rounded-xl p-4 border border-white/5">
-                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">📊 Nilai Hasil Nilai</h4>
+                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">📊 Transkrip Nilai</h4>
                             <div class="grid grid-cols-3 sm:grid-cols-3 gap-2 text-center">
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Agama</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PPKn</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">B. Indonesia</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Matematika</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPA</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPS</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">SBdP</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PJOK</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div></div>
-                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">B. Inggris</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Agama</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PPKn</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">B. Indonesia</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Matematika</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPA</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPS</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">SBdP</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PJOK</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div></div>
+                                <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">B. Inggris</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div></div>
                             </div>
                         </div>
 
-                        <div class="text-center p-5 rounded-xl border ${isLulus ? 'bg-emerald-950/40 border-emerald-500/10' : 'bg-rose-950/40 border-rose-500/10'}">
-                            <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 block mb-1">Anda Dinyatakan</span>
-                            <div class="text-2xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'} uppercase">${s.status}</div>
-                            <p class="text-xs text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
+                        <div class="text-center p-3.5 rounded-xl border ${isLulus ? 'bg-emerald-950/40 border-emerald-500/10' : 'bg-rose-950/40 border-rose-500/10'}">
+                            <span class="text-[9px] font-semibold uppercase tracking-widest text-slate-400 block mb-0.5">Dinyatakan</span>
+                            <div class="text-xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'} uppercase mb-0.5">${s.status}</div>
+                            <span class="text-[10px] font-medium text-slate-400 bg-slate-900/50 px-2 py-0.5 rounded-full border border-white/5 inline-block mb-2">Tahun Ajaran 2025/2026</span>
+                            <p class="text-[11px] text-slate-300 max-w-md mx-auto leading-relaxed">
                                 ${isLulus 
-                                    ? "Selamat atas kelulusan yang telah diraih. Semoga pencapaian ini menjadi langkah awal menuju masa depan yang lebih cerah. Teruslah belajar, berkembang, dan mengukir prestasi gemilang di jenjang pendidikan berikutnya." 
-                                    : "Tetap semangat dan jangan menyerah dalam meraih cita-cita. Setiap proses adalah bagian dari perjalanan menuju keberhasilan. Teruslah belajar, berusaha, dan jadikan pengalaman hari ini sebagai motivasi untuk meraih masa depan yang lebih baik."}
+                                    ? "Selamat atas pencapaian berharga ini! Teruslah belajar, berproses, berkembang, dan ukir prestasi gemilang di jenjang pendidikan berikutnya." 
+                                    : "Jangan berkecil hati, tetap semangat berjuang. Kegagalan hari ini adalah awal dari kesuksesan yang tertunda di masa depan."}
                             </p>
                             ${(isLulus && s.linkSKL) ? `
-                                <div class="mt-4">
-                                    <a href="${s.linkSKL}" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
-                                        📥 Unduh SKL Resmi (PDF)
+                                <div class="mt-3">
+                                    <a href="${s.linkSKL}" target="_blank" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-4 py-2 rounded-xl shadow-md transition cursor-pointer">
+                                        📥 Unduh SKL (PDF)
                                     </a>
                                 </div>` : ''}
                         </div>
@@ -508,7 +509,7 @@
                             <td class="p-4 font-semibold">${s.nis}</td>
                             <td class="p-4 font-medium text-slate-900">${s.nama}</td>
                             <td class="p-4">${s.kelas || '-'}</td>
-                            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${s.status === 'LULUS' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}">${s.status}</span></td>
+                            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${s.status === 'LULUS' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}\">${s.status}</span></td>
                             <td class="p-4 text-center space-x-1.5">
                                 <button onclick="editSiswa('${key}')" class="text-blue-600 bg-blue-50 px-2.5 py-1 rounded hover:bg-blue-100 font-semibold cursor-pointer">Edit</button>
                                 <button onclick="hapusSiswa('${key}')" class="text-rose-600 bg-rose-50 px-2.5 py-1 rounded hover:bg-rose-100 font-semibold cursor-pointer">Hapus</button>
@@ -522,7 +523,7 @@
         function openModalTambah() {
             document.getElementById('formSiswaManual').reset();
             document.getElementById('m_key_id').value = "";
-            document.getElementById('modalSiswaTitle').innerText = "📝 Input Manual";
+            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Data Siswa Manual";
             document.getElementById('modalSiswa').classList.remove('hidden');
         }
         function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden'); }
@@ -556,7 +557,7 @@
             refTarget.set(payload).then(() => {
                 closeModalSiswa();
                 loadDaftarSiswaAdmin();
-                showNotification(key ? "Data siswa berhasil diperbarui!" : "Berhasil");
+                showNotification(key ? "Data siswa berhasil diperbarui!" : "Siswa baru berhasil ditambahkan!");
             });
         }
 
