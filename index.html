@@ -157,15 +157,15 @@
         </section>
 
         <section id="view-login" class="w-full hidden animate__animated animate__zoomIn card-main rounded-2xl shadow-2xl p-6 md:p-8 max-w-md mx-auto">
-            <h2 class="text-base md:text-lg font-bold text-white text-center mb-1">Masuk Portal Kelulusan</h2>
-            <p class="text-xs text-slate-400 text-center mb-6">Masukkan NIS & Password dari Wali Kelas</p>
+            <h2 class="text-base md:text-lg font-bold text-white text-center mb-1">Login Portal Kelulusan</h2>
+            <p class="text-xs text-slate-400 text-center mb-6">Masukkan NIS & Password</p>
             <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1.5">Nomor Induk Siswa (NIS)</label>
                     <input type="text" id="loginNis" required class="w-full input-field rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 12345">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Kata Sandi / Password</label>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
                     <input type="password" id="loginPassword" required class="w-full input-field rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md transition-all mt-2 cursor-pointer">Periksa Hasil Kelulusan</button>
@@ -286,14 +286,14 @@
                 
                 <div class="flex justify-end gap-2 border-t pt-4">
                     <button type="button" onclick="closeModalSiswa()" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-md cursor-pointer">Simpan Data</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-md cursor-pointer">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        let targetCountdownDate = new Date("Jun 15, 2026 10:00:00").getTime();
+        let targetCountdownDate = new Date("Jun 02, 2026 10:00:00").getTime();
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
 
@@ -403,14 +403,14 @@
             const nis = document.getElementById('loginNis').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             db.ref('siswa').orderByChild('nis').equalTo(nis).once('value').then((snapshot) => {
-                if(!snapshot.exists()) return showNotification("Siswa tidak ditemukan!", "error");
+                if(!snapshot.exists()) return showNotification("Data siswa tidak ditemukan!", "error");
                 let siswaData = null;
                 snapshot.forEach((child) => {
                     if(String(child.val().password) === password) {
                         siswaData = child.val();
                     }
                 });
-                if(!siswaData) return showNotification("Kombinasi NIS & Kata Sandi salah!", "error");
+                if(!siswaData) return showNotification("NIS atau Password salah!", "error");
                 showNotification(`Selamat Datang, ${siswaData.nama}`);
                 renderHasilSiswaCard(siswaData);
                 switchView('result');
@@ -455,7 +455,7 @@
                     <div class="md:col-span-8 space-y-4">
                         
                         <div class="bg-slate-900/40 rounded-xl p-4 border border-white/5">
-                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">📊 Nilai Hasil Ujian Sekolah</h4>
+                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">📊 Nilai Hasil Nilai</h4>
                             <div class="grid grid-cols-3 sm:grid-cols-3 gap-2 text-center">
                                 <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Agama</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
                                 <div class="bg-slate-800/50 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PPKn</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
@@ -470,12 +470,12 @@
                         </div>
 
                         <div class="text-center p-5 rounded-xl border ${isLulus ? 'bg-emerald-950/40 border-emerald-500/10' : 'bg-rose-950/40 border-rose-500/10'}">
-                            <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 block mb-1">Dinyatakan</span>
+                            <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 block mb-1">Anda Dinyatakan</span>
                             <div class="text-2xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'} uppercase">${s.status}</div>
                             <p class="text-xs text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
                                 ${isLulus 
-                                    ? "Selamat atas pencapaian berharga ini! Teruslah belajar, berproses, berkembang, dan ukir prestasi gemilang di jenjang pendidikan berikutnya." 
-                                    : "Jangan berkecil hati, tetap semangat berjuang. Kegagalan hari ini adalah awal dari kesuksesan yang tertunda di masa depan."}
+                                    ? "Selamat atas kelulusan yang telah diraih. Semoga pencapaian ini menjadi langkah awal menuju masa depan yang lebih cerah. Teruslah belajar, berkembang, dan mengukir prestasi gemilang di jenjang pendidikan berikutnya." 
+                                    : "Tetap semangat dan jangan menyerah dalam meraih cita-cita. Setiap proses adalah bagian dari perjalanan menuju keberhasilan. Teruslah belajar, berusaha, dan jadikan pengalaman hari ini sebagai motivasi untuk meraih masa depan yang lebih baik."}
                             </p>
                             ${(isLulus && s.linkSKL) ? `
                                 <div class="mt-4">
@@ -522,7 +522,7 @@
         function openModalTambah() {
             document.getElementById('formSiswaManual').reset();
             document.getElementById('m_key_id').value = "";
-            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Data Siswa Manual";
+            document.getElementById('modalSiswaTitle').innerText = "📝 Input Manual";
             document.getElementById('modalSiswa').classList.remove('hidden');
         }
         function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden'); }
@@ -556,7 +556,7 @@
             refTarget.set(payload).then(() => {
                 closeModalSiswa();
                 loadDaftarSiswaAdmin();
-                showNotification(key ? "Data siswa berhasil diperbarui!" : "Siswa baru berhasil ditambahkan!");
+                showNotification(key ? "Data siswa berhasil diperbarui!" : "Berhasil");
             });
         }
 
