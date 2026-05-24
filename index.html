@@ -45,7 +45,7 @@
             -webkit-backdrop-filter: blur(10px);
         }
 
-        /* ELEMEN UTAMA BACKGROUND BANNER (Mengisi Seluruh Area Termasuk yang Ditandai Merah) */
+        /* ELEMEN UTAMA BACKGROUND BANNER (Mengisi Seluruh Area Layar Utama) */
         #bgBannerImage {
             position: fixed;
             top: 0;
@@ -61,7 +61,7 @@
         #bgDarkenOverlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9));
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.9));
             z-index: -9;
             display: none;
         }
@@ -107,15 +107,15 @@
 
     <script>
         // =========================================================================
-        // JALUR REPOSITORI GITHUB (PASTIKAN USERNAME & REPO DI BAWAH INI BENAR)
+        // JALUR REPOSITORI GITHUB (SUDAH DISESUAIKAN DENGAN STRUKTUR FOLDER GITHUB ANDA)
         // =========================================================================
         const GITHUB_USER = "febriramadhan02"; 
         const GITHUB_REPO = "lulus"; 
 
-        // Pemanggilan jalur berkas aset resmi dari GitHub repositori Anda
-        const LINK_LOGO_MAIN          = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
-        const LINK_LOGO_COUNTDOWN     = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_countdown.png`;
-        const LINK_BACKGROUND_BANNER  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/background.jpg`;
+        // Pemanggilan disesuaikan: Folder "Asset" (A kapital) & Ekstensi Gambar (.PNG / .JPG kapital)
+        const LINK_LOGO_MAIN          = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/logo_main.PNG`;
+        const LINK_LOGO_COUNTDOWN     = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/logo_countdown.PNG`;
+        const LINK_BACKGROUND_BANNER  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/background.JPG`;
 
         // Konfigurasi Database Firebase SDK v8
         const firebaseConfig = {
@@ -323,47 +323,32 @@
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
 
-        // FUNGSI UTAMA UNTUK MERENDER BACKGROUND BANNER DAN LOGO GITHUB SECARA AMAN (+ SAKLAR TOLE RUKAN GAMBAR)
+        // FUNGSI UTAMA UNTUK MERENDER BACKGROUND BANNER DAN LOGO GITHUB SECARA TOTAL & PRESISI
         function renderCustomAssets() {
             const logoContainer = document.getElementById('logoContainer');
             const bannerContainer = document.getElementById('bannerCountdownContainer');
             const bgImgElement = document.getElementById('bgBannerImage');
             const darkenOverlay = document.getElementById('bgDarkenOverlay');
 
-            const isDefaultUser = (!GITHUB_USER || GITHUB_USER.trim() === "" || GITHUB_USER.includes("USERNAME_ANDA"));
+            // Set langsung gambar ke elemen HTML
+            logoContainer.innerHTML = `<img src="${LINK_LOGO_MAIN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
+            bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-14 h-14 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700/60 shadow-inner\'><svg class=\'w-7 h-7\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
 
-            if (!isDefaultUser) {
-                // Pasang Logo Header Resmi (Jika link error/rusak, otomatis buat teks kotak biru "N" rapi)
-                logoContainer.innerHTML = `<img src="${LINK_LOGO_MAIN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
-                
-                // Pasang Logo Countdown Khusus Diam (Jika link error/rusak, otomatis buat ikon SVG jam)
-                bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-14 h-14 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700/60 shadow-inner\'><svg class=\'w-7 h-7\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
-
-                // Logika pemuatan background banner sekolah murni HTML image
-                bgImgElement.src = LINK_BACKGROUND_BANNER;
-                bgImgElement.onload = function() {
-                    bgImgElement.style.display = "block";
-                    darkenOverlay.style.display = "block";
-                };
-                bgImgElement.onerror = function() {
-                    // Fallback jika file background.jpg di GitHub Anda tidak ditemukan/salah ketik ekstensi
-                    bgImgElement.style.display = "none";
-                    darkenOverlay.style.display = "none";
-                    document.body.style.backgroundColor = "#0f172a";
-                };
-            } else {
-                // Tampilan Cadangan Darurat
-                logoContainer.innerHTML = `<div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md">N</div>`;
-                bannerContainer.innerHTML = `<div class="w-14 h-14 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700/60 shadow-inner"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
+            bgImgElement.src = LINK_BACKGROUND_BANNER;
+            bgImgElement.onload = function() {
+                bgImgElement.style.display = "block";
+                darkenOverlay.style.display = "block";
+            };
+            bgImgElement.onerror = function() {
                 bgImgElement.style.display = "none";
                 darkenOverlay.style.display = "none";
-            }
+                document.body.style.backgroundColor = "#0f172a";
+            };
         }
 
         // Ambil konfigurasi waktu resmi dari database Firebase Anda
         db.ref('config/website').on('value', (snapshot) => {
             const cfg = snapshot.val() || {};
-            // Jalankan fungsi aset tepat setelah data konfigurasi dimuat
             renderCustomAssets(); 
             if (cfg.targetWaktuString) {
                 targetCountdownDate = new Date(cfg.targetWaktuString).getTime();
@@ -502,12 +487,12 @@
             return String(val).trim();
         }
 
-        // RENDERING KARTU KELULUSAN BERANIMASI LULUS & KALIMAT SELAMAT SESUAI GAMBAR ACUAN
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status === "LULUS";
             
-            let baseUrlFoto = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/foto_siswa/${s.nis}`;
+            // Perhatian folder foto: disesuaikan ke folder Asset (A Kapital)
+            let baseUrlFoto = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/foto_siswa/${s.nis}`;
 
             if (isLulus) {
                 resCard.className = "animate__animated animate__tada card-main rounded-2xl shadow-2xl p-6 md:p-8 border transition-all duration-500 w-full glow-success border-emerald-500/60 bg-emerald-950/30";
@@ -774,7 +759,7 @@
             });
         });
 
-        // Jalankan inisialisasi awal
+        // Jalankan inisialisasi aset
         renderCustomAssets();
         initCountdownEngine();
     </script>
