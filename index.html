@@ -95,7 +95,6 @@
             appId: "1:699877120416:web:83a0de5ca21fa267232cc5",
             measurementId: "G-557N4E2DTT"
         };
-
         // Inisialisasi Firebase secara aman
         if (!firebase.apps.length) { 
             firebase.initializeApp(firebaseConfig);
@@ -109,7 +108,8 @@
         <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 flex items-center justify-center">
-                    <img src="assets/logo_main.png" alt="Logo Sekolah" class="responsive-img" onerror="this.onerror=null; this.src='assets/logo_main.PNG'; this.onerror=function(){this.src='assets/logo_main.jpg'; this.onerror=function(){this.src='assets/logo_main.JPG'; this.onerror=function(){this.src='https://placehold.co/100x100/1e293b/ffffff?text=NARADA'}}}}">
+                    <img src="assets/logo_main.png" 
+                        alt="Logo Sekolah" class="responsive-img" onerror="this.onerror=null; this.src='assets/logo_main.PNG'; this.onerror=function(){this.src='assets/logo_main.jpg'; this.onerror=function(){this.src='assets/logo_main.JPG'; this.onerror=function(){this.src='https://placehold.co/100x100/1e293b/ffffff?text=NARADA'}}}}">
                 </div>
                 <div>
                     <h1 class="text-sm md:text-base font-bold text-white tracking-tight">SDS NARADA</h1>
@@ -123,8 +123,8 @@
         
         <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-2xl p-6 md:p-8 text-center my-6 max-w-xl mx-auto">
             
-            <div class="w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden flex items-center justify-center bg-transparent border-2 border-white/20 p-1 backdrop-blur-sm shadow-inner">
-                <img src="assets/logo_countdown.png" alt="Timer" class="w-full h-full object-contain rounded-full" onerror="this.onerror=null; this.src='assets/logo_countdown.PNG'; this.onerror=function(){this.src='assets/logo_countdown.jpg'; this.onerror=function(){this.src='assets/logo_countdown.JPG'; this.onerror=function(){this.src='https://placehold.co/120x120/1e293b/ffffff?text=NARADA'}}}}">
+            <div class="w-28 h-28 mx-auto mb-5 rounded-2xl flex items-center justify-center bg-slate-900/40 border border-white/10 p-2.5 backdrop-blur-md shadow-xl">
+                <img src="assets/logo_countdown.png" alt="Logo Sekolah Countdown" class="max-w-full max-h-full object-contain" onerror="this.onerror=null; this.src='assets/logo_countdown.PNG'; this.onerror=function(){this.src='assets/logo_countdown.jpg'; this.onerror=function(){this.src='assets/logo_countdown.JPG'; this.onerror=function(){this.src='https://placehold.co/120x120/1e293b/ffffff?text=NARADA'}}}}">
             </div>
             
             <h2 class="text-lg font-bold text-white tracking-tight">COUNTDOWN</h2>
@@ -377,12 +377,12 @@
             }
         }
 
-        function openModalLoginAdmin() {
-            document.getElementById('inputPassAdmin').value = "";
+        function openModalLoginAdmin() { 
+            document.getElementById('inputPassAdmin').value = ""; 
             document.getElementById('modalLoginAdmin').classList.remove('hidden');
         }
         function closeModalLoginAdmin() { document.getElementById('modalLoginAdmin').classList.add('hidden'); }
-
+        
         function handleAdminLogin(e) {
             e.preventDefault();
             if(document.getElementById('inputPassAdmin').value === globalAdminPass) {
@@ -398,19 +398,15 @@
             e.preventDefault();
             const nis = document.getElementById('loginNis').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-
             db.ref('siswa').orderByChild('nis').equalTo(nis).once('value').then((snapshot) => {
                 if(!snapshot.exists()) return showNotification("Siswa tidak ditemukan!", "error");
-                
                 let siswaData = null;
-                snapshot.forEach((child) => { 
-                    if(String(child.val().password) === password) { 
-                        siswaData = child.val(); 
-                    } 
+                snapshot.forEach((child) => {
+                    if(String(child.val().password) === password) {
+                        siswaData = child.val();
+                    }
                 });
-
                 if(!siswaData) return showNotification("Kombinasi NIS & Kata Sandi salah!", "error");
-                
                 showNotification(`Selamat Datang, ${siswaData.nama}`);
                 renderHasilSiswaCard(siswaData);
                 switchView('result');
@@ -428,168 +424,260 @@
             return String(val).trim();
         }
 
-        // RENDER KARTU HASIL: Memuat foto siswa dengan mekanisme berantai aman (.png -> .jpg -> .JPG -> .PNG)
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status === "LULUS";
             let pathFotoBase = `assets/foto_siswa/${s.nis}`;
-
+            
             if (isLulus) {
-                resCard.className = "animate__animated animate__tada card-main rounded-2xl p-6 md:p-8 border glow-success border-emerald-500/50 bg-emerald-950/40 w-full";
+                resCard.className = "animate__animated animate__tada card-main rounded-2xl p-6 md:p-8 border glow-success border-emerald-500/30";
             } else {
-                resCard.className = "animate__animated animate__fadeInUp card-main rounded-2xl p-6 md:p-8 border border-rose-500/50 bg-rose-950/40 w-full";
+                resCard.className = "animate__animated animate__headShake card-main rounded-2xl p-6 md:p-8 border border-rose-500/30";
             }
 
-            resCard.innerHTML = `
-                ${isLulus ? `
-                <div class="text-center mb-6 animate__animated animate__bounceInDown">
-                    <h4 class="text-emerald-400 font-black text-xl tracking-wide uppercase">🎉 SELAMAT & SUKSES 🎉</h4>
-                    <p class="text-xs text-emerald-200/80 mt-0.5">Anda dinyatakan LULUS dari SDS Narada</p>
+            let htmlContent = `
+                <div class="flex flex-col items-center text-center border-b border-white/10 pb-6 mb-6">
+                    <div class="relative mb-4 flex items-center justify-center">
+                        <img src="${pathFotoBase}.png" class="foto-3x4 shadow-md bg-slate-800" onerror="this.onerror=null; this.src='${pathFotoBase}.jpg'; this.onerror=function(){this.src='${pathFotoBase}.JPG'; this.onerror=function(){this.src='${pathFotoBase}.PNG'; this.onerror=function(){this.src='https://placehold.co/300x400/1e293b/ffffff?text=FOTO+3X4'}}}}">
+                    </div>
+                    <h3 class="text-base font-bold text-white tracking-wide uppercase">${s.nama}</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">NIS: ${s.nis} | NISN: ${s.nisn || '-'}</p>
+                    <p class="text-xs text-slate-400 font-medium">${s.kelas || '-'}</p>
+                    <p class="text-[11px] text-slate-500 mt-1">${s.ttl || '-'}</p>
                 </div>
-                ` : ''}
 
-                <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left">
-                    <div class="foto-3x4 overflow-hidden shrink-0 bg-slate-950 flex items-center justify-center">
-                        <img src="${pathFotoBase}.png" class="w-full h-full object-cover" 
-                             onerror="this.onerror=null; this.src='${pathFotoBase}.jpg'; 
-                             this.onerror=function(){this.src='${pathFotoBase}.JPG'; 
-                             this.onerror=function(){this.src='${pathFotoBase}.PNG';
-                             this.onerror=function(){this.src='https://placehold.co/150x200/1e293b/ffffff?text=${s.nis}'}}}}">
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-blue-900/60 text-blue-200 uppercase tracking-wider">${s.kelas || 'Umum'}</span>
-                        <h3 class="text-base md:text-lg font-bold text-white tracking-tight mt-1">${s.nama}</h3>
-                        <p class="text-xs text-slate-400 font-medium">NIS: ${s.nis} | NISN: ${s.nisn || '-'}</p>
-                        <p class="text-xs text-slate-400">TTL: ${s.ttl || '-'}</p>
-                    </div>
-                    <div class="text-center sm:text-right pt-2 sm:pt-0">
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Keputusan Akhir</div>
-                        <div class="text-2xl font-black mt-1 ${isLulus ? 'text-emerald-400' : 'text-rose-400'}">${s.status}</div>
+                <div class="bg-slate-900/40 rounded-xl p-4 border border-white/5 mb-6">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center sm:text-left">📊 Perolehan Nilai Ujian Sekolah</h4>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">Agama</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PPKn</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">B. Indo</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">MTK</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPA</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">IPS</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">SBdP</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5"><div class="text-[10px] text-slate-400 font-medium">PJOK</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div></div>
+                        <div class="bg-slate-800/60 p-2 rounded-lg border border-white/5 sm:col-span-2"><div class="text-[10px] text-slate-400 font-medium">B. Inggris</div><div class="text-xs font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div></div>
                     </div>
                 </div>
 
-                <div class="border-t border-slate-700/50 my-6 pt-5">
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3 text-center sm:text-left">📈 Transkrip Hasil Ujian Sekolah</h4>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>Agama:</span><b class="text-white">${formatNilaiTampil(s.nilai?.agama)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>PPKn:</span><b class="text-white">${formatNilaiTampil(s.nilai?.ppkn)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>B. Indonesia:</span><b class="text-white">${formatNilaiTampil(s.nilai?.indonesia)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>Matematika:</span><b class="text-white">${formatNilaiTampil(s.nilai?.matematika)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>IPA:</span><b class="text-white">${formatNilaiTampil(s.nilai?.ipa)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>IPS:</span><b class="text-white">${formatNilaiTampil(s.nilai?.ips)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>SBdP:</span><b class="text-white">${formatNilaiTampil(s.nilai?.sbdp)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>PJOK:</span><b class="text-white">${formatNilaiTampil(s.nilai?.pjok)}</b></div>
-                        <div class="p-2 bg-slate-900/50 border border-slate-800 rounded-xl flex justify-between"><span>B. Inggris:</span><b class="text-white">${formatNilaiTampil(s.nilai?.inggris)}</b></div>
-                    </div>
+                <div class="text-center p-5 rounded-xl border ${isLulus ? 'bg-emerald-950/40 border-emerald-500/20' : 'bg-rose-950/40 border-rose-500/20'}">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-slate-400 block mb-1">Dinyatakan</span>
+                    <div class="text-2xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'} uppercase">${s.status}</div>
+                    <p class="text-xs text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
+                        ${isLulus 
+                            ? "Selamat atas pencapaian berharga ini! Teruslah belajar, berproses, berkembang, dan ukir prestasi gemilang di jenjang pendidikan berikutnya." 
+                            : "Jangan berkecil hati, tetap semangat berjuang. Kegagalan hari ini adalah awal dari kesuksesan yang tertunda di masa depan."}
+                    </p>
+                    ${(isLulus && s.linkSKL) ? `
+                        <div class="mt-5">
+                            <a href="${s.linkSKL}" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
+                                📥 Unduh SKL Resmi (PDF)
+                            </a>
+                        </div>` : ''}
                 </div>
-
-                ${s.linkSKL ? `
-                <div class="pt-1 text-center sm:text-left">
-                    <a href="${s.linkSKL}" target="_blank" class="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all">📄 Unduh Surat Keterangan Lulus (SKL)</a>
-                </div>
-                ` : ''}
             `;
+            resCard.innerHTML = htmlContent;
         }
 
-        // OPTIMISASI TABEL ADMIN: Mencegah browser freeze dengan teknik memory buffering string
+        // FUNGSI ADMIN PANEL BACKEND DATA
         function loadDaftarSiswaAdmin() {
             const tbody = document.getElementById('tabelSiswaAdmin');
-            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Menghubungkan ke Firebase...</td></tr>`;
-
-            db.ref('siswa').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if(!data) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Database kosong.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Memuat data...</td></tr>`;
+            db.ref('siswa').once('value').then((snapshot) => {
+                tbody.innerHTML = "";
+                if (!snapshot.exists()) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data siswa.</td></tr>`;
                     return;
                 }
-
-                let htmlRowsBuffer = "";
-                Object.keys(data).forEach((key) => {
-                    const s = data[key];
-                    htmlRowsBuffer += `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all text-xs">
-                            <td class="p-4 font-bold text-slate-900">${s.nis}</td>
-                            <td class="p-4 font-medium">${s.nama}</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-100 rounded text-slate-600 text-[10px] font-bold">${s.kelas || '-'}</span></td>
-                            <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.status === 'LULUS' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">${s.status}</span></td>
-                            <td class="p-4 text-center flex items-center justify-center gap-1.5">
-                                <button onclick="editSiswa('${key}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded font-semibold cursor-pointer">Edit</button>
-                                <button onclick="hapusSiswa('${key}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1 rounded font-semibold cursor-pointer">Hapus</button>
+                snapshot.forEach((child) => {
+                    const s = child.val();
+                    const key = child.key;
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50/80 transition-all">
+                            <td class="p-4 font-semibold">${s.nis}</td>
+                            <td class="p-4 font-medium text-slate-900">${s.nama}</td>
+                            <td class="p-4">${s.kelas || '-'}</td>
+                            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${s.status === 'LULUS' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}">${s.status}</span></td>
+                            <td class="p-4 text-center space-x-1.5">
+                                <button onclick="editSiswa('${key}')" class="text-blue-600 bg-blue-50 px-2.5 py-1 rounded hover:bg-blue-100 font-semibold cursor-pointer">Edit</button>
+                                <button onclick="hapusSiswa('${key}')" class="text-rose-600 bg-rose-50 px-2.5 py-1 rounded hover:bg-rose-100 font-semibold cursor-pointer">Hapus</button>
                             </td>
                         </tr>
                     `;
                 });
-                tbody.innerHTML = htmlRowsBuffer;
             });
         }
 
         function openModalTambah() {
             document.getElementById('formSiswaManual').reset();
             document.getElementById('m_key_id').value = "";
-            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Siswa Baru";
+            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Data Siswa Manual";
             document.getElementById('modalSiswa').classList.remove('hidden');
         }
         function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden'); }
 
-        function formatNilaiDariInput(idInput) {
-            let s = document.getElementById(idInput).value.trim();
-            return s === "" ? "0" : s;
+        function simpanSiswaManual(e) {
+            e.preventDefault();
+            const key = document.getElementById('m_key_id').value;
+            const payload = {
+                nama: document.getElementById('m_nama').value.trim(),
+                nis: document.getElementById('m_nis').value.trim(),
+                nisn: document.getElementById('m_nisn').value.trim(),
+                password: document.getElementById('m_pass').value.trim(),
+                ttl: document.getElementById('m_ttl').value.trim(),
+                kelas: document.getElementById('m_kelas').value.trim(),
+                status: document.getElementById('m_status').value,
+                linkSKL: document.getElementById('m_skl').value.trim(),
+                nilai: {
+                    agama: document.getElementById('n_agama').value.trim() || "0",
+                    ppkn: document.getElementById('n_ppkn').value.trim() || "0",
+                    indonesia: document.getElementById('n_indo').value.trim() || "0",
+                    matematika: document.getElementById('n_mtk').value.trim() || "0",
+                    ipa: document.getElementById('n_ipa').value.trim() || "0",
+                    ips: document.getElementById('n_ips').value.trim() || "0",
+                    sbdp: document.getElementById('n_sbdp').value.trim() || "0",
+                    pjok: document.getElementById('n_pjok').value.trim() || "0",
+                    inggris: document.getElementById('n_ing').value.trim() || "0"
+                }
+            };
+
+            const refTarget = key ? db.ref(`siswa/${key}`) : db.ref('siswa').push();
+            refTarget.set(payload).then(() => {
+                closeModalSiswa();
+                loadDaftarSiswaAdmin();
+                showNotification(key ? "Data siswa berhasil diperbarui!" : "Siswa baru berhasil ditambahkan!");
+            });
         }
 
-        function simpanSiswaManual(e){e.preventDefault();const key=document.getElementById('m_key_id').value;const payload={nama:document.getElementById('m_nama').value.trim(),nis:document.getElementById('m_nis').value.trim(),nisn:document.getElementById('m_nisn').value.trim(),password:document.getElementById('m_pass').value.trim(),ttl:document.getElementById('m_ttl').value.trim(),kelas:document.getElementById('m_kelas').value.trim(),status:document.getElementById('m_status').value,linkSKL:document.getElementById('m_skl').value.trim(),nilai:{agama:formatNilaiDariInput('n_agama'),ppkn:formatNilaiDariInput('n_ppkn'),indonesia:formatNilaiDariInput('n_indo'),matematika:formatNilaiDariInput('n_mtk'),ipa:formatNilaiDariInput('n_ipa'),ips:formatNilaiDariInput('n_ips'),sbdp:formatNilaiDariInput('n_sbdp'),pjok:formatNilaiDariInput('n_pjok'),inggris:formatNilaiDariInput('n_ing')}};if(key){db.ref('siswa/'+key).set(payload).then(()=>{closeModalSiswa();showNotification("Data siswa diperbarui!");});}else{db.ref('siswa').push(payload).then(()=>{closeModalSiswa();showNotification("Siswa baru disimpan!");});}}
-        function editSiswa(key){db.ref('siswa/'+key).once('value').then((snapshot)=>{const s=snapshot.val();if(!s)return;document.getElementById('m_key_id').value=key;document.getElementById('m_nama').value=s.nama||'';document.getElementById('m_nis').value=s.nis||'';document.getElementById('m_nisn').value=s.nisn||'';document.getElementById('m_pass').value=s.password||'';document.getElementById('m_ttl').value=s.ttl||'';document.getElementById('m_kelas').value=s.kelas||'';document.getElementById('m_status').value=s.status||'LULUS';document.getElementById('m_skl').value=s.linkSKL||'';document.getElementById('n_agama').value=formatNilaiTampil(s.nilai?.agama);document.getElementById('n_ppkn').value=formatNilaiTampil(s.nilai?.ppkn);document.getElementById('n_indo').value=formatNilaiTampil(s.nilai?.indonesia);document.getElementById('n_mtk').value=formatNilaiTampil(s.nilai?.matematika);document.getElementById('n_ipa').value=formatNilaiTampil(s.nilai?.ipa);document.getElementById('n_ips').value=formatNilaiTampil(s.nilai?.ips);document.getElementById('n_sbdp').value=formatNilaiTampil(s.nilai?.sbdp);document.getElementById('n_pjok').value=formatNilaiTampil(s.nilai?.pjok);document.getElementById('n_ing').value=formatNilaiTampil(s.nilai?.inggris);document.getElementById('modalSiswaTitle').innerText="📝 Edit Formulir Siswa";document.getElementById('modalSiswa').classList.remove('hidden');});}
-        function hapusSiswa(key){if(confirm("Hapus data siswa ini?")){db.ref('siswa/'+key).remove().then(()=>{showNotification("Siswa berhasil dihapus","error");});}}
-        function saveCountdownTimer(){const t=document.getElementById('cfgTargetWaktu').value;if(!t)return showNotification("Tentukan waktu!","error");db.ref('config/website').set({targetWaktuString:t}).then(()=>{showNotification("Countdown diperbarui!");});}
-        function ambilNilaiAsliExcel(v){if(v===undefined||v===null||v==="")return"0";return String(v).trim();}
+        function editSiswa(key) {
+            db.ref(`siswa/${key}`).once('value').then((snapshot) => {
+                if(!snapshot.exists()) return;
+                const s = snapshot.val();
+                document.getElementById('m_key_id').value = key;
+                document.getElementById('m_nama').value = s.nama;
+                document.getElementById('m_nis').value = s.nis;
+                document.getElementById('m_nisn').value = s.nisn || "";
+                document.getElementById('m_pass').value = s.password;
+                document.getElementById('m_ttl').value = s.ttl;
+                document.getElementById('m_kelas').value = s.kelas || "";
+                document.getElementById('m_status').value = s.status;
+                document.getElementById('m_skl').value = s.linkSKL || "";
+                
+                document.getElementById('n_agama').value = s.nilai?.agama || "0";
+                document.getElementById('n_ppkn').value = s.nilai?.ppkn || "0";
+                document.getElementById('n_indo').value = s.nilai?.indonesia || "0";
+                document.getElementById('n_matematika').value = s.nilai?.matematika || "0";
+                document.getElementById('n_ipa').value = s.nilai?.ipa || "0";
+                document.getElementById('n_ips').value = s.nilai?.ips || "0";
+                document.getElementById('n_sbdp').value = s.nilai?.sbdp || "0";
+                document.getElementById('n_pjok').value = s.nilai?.pjok || "0";
+                document.getElementById('n_ing').value = s.nilai?.inggris || "0";
 
-        // INTEGRASI IMPOR EXCEL REALTIME
+                document.getElementById('modalSiswaTitle').innerText = "📝 Edit Data Siswa";
+                document.getElementById('modalSiswa').classList.remove('hidden');
+            });
+        }
+
+        function hapusSiswa(key) {
+            if(confirm("Apakah Anda yakin ingin menghapus data siswa ini secara permanen?")) {
+                db.ref(`siswa/${key}`).remove().then(() => {
+                    loadDaftarSiswaAdmin();
+                    showNotification("Data siswa telah berhasil dihapus.", "error");
+                });
+            }
+        }
+
+        function saveCountdownTimer() {
+            const valWaktu = document.getElementById('cfgTargetWaktu').value;
+            if(!valWaktu) return alert("Silakan tentukan tanggal dan jam terlebih dahulu!");
+            db.ref('config/website').set({ targetWaktuString: valWaktu }).then(() => {
+                showNotification("Jadwal hitung mundur berhasil diperbarui!");
+            });
+        }
+
+        // IMPORT EXCEL HANDLER ENGINE
         document.getElementById('uploadExcel').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(evt) {
-                const data = evt.target.result;
-                const workbook = XLSX.read(data, { type: 'binary' });
-                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { raw: false });
-                if(rows.length === 0) return showNotification("File Excel Kosong!", "error");
-                let totalData = 0;
-                rows.forEach((row) => {
-                    const payload = {
-                        nama: row["Nama Lengkap Siswa"] || row["Nama Siswa"] || "Siswa Baru",
-                        nis: String(row["NIS"] || ""),
-                        nisn: String(row["NISN"] || "-"),
-                        password: String(row["Password Siswa"] || "123456"),
-                        ttl: row["Tempat Tanggal Lahir"] || "-",
-                        kelas: row["Pilih Kelas"] || "Umum",
-                        status: String(row["Status"]).toUpperCase().trim() === "LULUS" ? "LULUS" : "TIDAK LULUS",
-                        linkSKL: row["Link SKL"] || "",
-                        nilai: {
-                            agama: ambilNilaiAsliExcel(row["Agama"]),
-                            ppkn: ambilNilaiAsliExcel(row["PPKn"]),
-                            indonesia: ambilNilaiAsliExcel(row["B. Indonesia"] || row["B. Indo"]),
-                            matematika: ambilNilaiAsliExcel(row["Matematika"] || row["MTK"]),
-                            ipa: ambilNilaiAsliExcel(row["IPA"]),
-                            ips: ambilNilaiAsliExcel(row["IPS"]),
-                            sbdp: ambilNilaiAsliExcel(row["SBdP"] || row["Seni Budaya"]),
-                            pjok: ambilNilaiAsliExcel(row["PJOK"]),
-                            inggris: ambilNilaiAsliExcel(row["B. Inggris"])
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const json = XLSX.utils.sheet_to_json(sheet);
+                    
+                    if(json.length === 0) return alert("File Excel kosong atau format tidak sesuai!");
+                    
+                    let importedCount = 0;
+                    db.ref('siswa').once('value').then((snapshot) => {
+                        const existingSiswa = {};
+                        if(snapshot.exists()) {
+                            snapshot.forEach((child) => {
+                                existingSiswa[String(child.val().nis).trim()] = child.key;
+                            });
                         }
-                    };
-                    if(payload.nis) { db.ref('siswa').push(payload); totalData++; }
-                });
-                showNotification(`Berhasil impor ${totalData} siswa!`);
+
+                        json.forEach(row => {
+                            const nisKey = String(row["NIS"] || "").trim();
+                            if(!nisKey) return;
+
+                            const payload = {
+                                nama: String(row["Nama Siswa"] || "").trim(),
+                                nis: nisKey,
+                                nisn: String(row["NISN"] || "").trim(),
+                                password: String(row["Password Siswa"] || row["Password"] || "123456").trim(),
+                                ttl: String(row["Tempat Tanggal Lahir"] || "-").trim(),
+                                kelas: String(row["Pilih Kelas"] || row["Kelas"] || "-").trim(),
+                                status: String(row["Status"] || "LULUS").toUpperCase().trim(),
+                                linkSKL: String(row["Link SKL"] || "").trim(),
+                                nilai: {
+                                    agama: formatNilaiTampil(row["Agama"] || row["P. Agama"]),
+                                    ppkn: formatNilaiTampil(row["PPKn"]),
+                                    indonesia: formatNilaiTampil(row["B. Indonesia"]),
+                                    matematika: formatNilaiTampil(row["Matematika"]),
+                                    ipa: formatNilaiTampil(row["IPA"]),
+                                    ips: formatNilaiTampil(row["IPS"]),
+                                    sbdp: formatNilaiTampil(row["SBdP"]),
+                                    pjok: formatNilaiTampil(row["PJOK"]),
+                                    inggris: formatNilaiTampil(row["B. Inggris"])
+                                }
+                            };
+
+                            if(existingSiswa[nisKey]) {
+                                db.ref(`siswa/${existingSiswa[nisKey]}`).set(payload);
+                            } else {
+                                db.ref('siswa').push(payload);
+                            }
+                            importedCount++;
+                        });
+
+                        document.getElementById('uploadExcel').value = "";
+                        loadDaftarSiswaAdmin();
+                        showNotification(`Berhasil memproses ${importedCount} data siswa!`);
+                    });
+                } catch(err) {
+                    alert("Gagal membaca file Excel. Pastikan format kolom sesuai template!");
+                }
             };
-            reader.readAsBinaryString(file);
+            reader.readAsArrayBuffer(file);
         });
 
+        // DOWNLOAD TEMPLATE EXCEL
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
-            const temp = [{"Nama Lengkap Siswa": "Dani Pratama", "NIS": "202601", "NISN": "00987123", "Password Siswa": "sandi123", "Tempat Tanggal Lahir": "Tangerang, 10 Mei 2014", "Pilih Kelas": "Kelas 6A", "Status": "LULUS", "Link SKL": "", "Agama": "90", "PPKn": "85", "B. Indonesia": "88", "Matematika": "80", "IPA": "85", "IPS": "84", "SBdP": "90", "PJOK": "87", "B. Inggris": "80"}];
-            const ws = XLSX.utils.json_to_sheet(temp);
+            const template = [{
+                "Nama Siswa": "Zack Ahmad", "NIS": "2026001", "NISN": "0123456789", "Password Siswa": "Sandi123", "Tempat Tanggal Lahir": "Jakarta, 10 Januari 2014", "Pilih Kelas": "Kelas 6A", "Status": "LULUS", "Link SKL": "https://drive.google.com/file/d/xxxx/view",
+                "Agama": 85, "PPKn": 88, "B. Indonesia": 90, "Matematika": 82, "IPA": 85, "IPS": 87, "SBdP": 90, "PJOK": 86, "B. Inggris": 80
+            }];
+            const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Template");
             XLSX.writeFile(wb, "Template_Database_Siswa.xlsx");
         });
 
+        // EXPORT DATA TO EXCEL
         document.getElementById('btnExport').addEventListener('click', function() {
             db.ref('siswa').once('value').then((snapshot) => {
                 const dataSiswa = snapshot.val();
@@ -597,16 +685,21 @@
                 const out = [];
                 Object.keys(dataSiswa).forEach(k => {
                     const s = dataSiswa[k];
-                    out.push({"Nama Siswa": s.nama, "NIS": s.nis, "NISN": s.nisn, "Password Siswa": s.password, "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL, "Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris)});
+                    out.push({
+                        "Nama Siswa": s.nama, "NIS": s.nis, "NISN": s.nisn, "Password Siswa": s.password, "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL, 
+                        "Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
+                    });
                 });
                 const ws = XLSX.utils.json_to_sheet(out);
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Database");
-                XLSX.writeFile(wb, "Data_Kelulusan_Siswa.xlsx");
+                XLSX.utils.book_append_sheet(wb, ws, "Database Siswa");
+                XLSX.writeFile(wb, "Database_Siswa_Export.xlsx");
+                showNotification("Database berhasil diekspor ke Excel!");
             });
         });
 
-        initCountdownEngine();
+        // Trigger inisialisasi awal view berdasarkan waktu terkini
+        setTimeout(() => { switchView('countdown'); }, 200);
     </script>
 </body>
 </html>
