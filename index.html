@@ -14,7 +14,29 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; color: #f8fafc; overflow-x: hidden; background-color: #0f172a; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            color: #f8fafc; 
+            overflow-x: hidden; 
+            margin: 0;
+            padding: 0;
+            min-h: 100vh;
+            /* KONSEP BARU: Background Gambar Utama langsung dipasang di Body secara Fullscreen */
+            background-image: url('https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/background.JPG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        /* Lapisan overlay gelap tipis di atas background agar teks putih kontras dan mudah dibaca */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85));
+            z-index: -1;
+        }
+
         .countdown-number { font-variant-numeric: tabular-nums; display: inline-block; text-align: center; }
         
         /* Animasi Glow Sukses (Lulus) */
@@ -27,95 +49,53 @@
             100% { box-shadow: 0 0 45px 5px rgba(16, 185, 129, 0.45); }
         }
 
-        /* Tema Transparan Agar Background Utama Terlihat Jelas di Belakang */
+        /* Tema Transparan Card Box */
         .card-main { 
-            background-color: rgba(15, 23, 42, 0.85); 
+            background-color: rgba(15, 23, 42, 0.8); 
             color: #f8fafc; 
             border-color: rgba(51, 65, 85, 0.5); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
         }
         .text-title { color: #ffffff; }
         .text-muted { color: #94a3b8; }
         .input-field { background-color: rgba(30, 41, 59, 0.7); color: #ffffff; border-color: rgba(71, 85, 105, 0.5); }
+        
         .header-portal { 
-            background-color: rgba(15, 23, 42, 0.8); 
+            background-color: rgba(15, 23, 42, 0.75); 
             border-color: rgba(51, 65, 85, 0.4); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        /* ELEMEN UTAMA BACKGROUND BANNER (Mengisi Seluruh Area Layar Utama) */
-        #bgBannerImage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            object-position: center;
-            z-index: -10;
-            display: none;
-        }
-        /* Lapisan Kegelapan overlay agar teks tidak silau dan tetap terbaca tajam */
-        #bgDarkenOverlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.9));
-            z-index: -9;
-            display: none;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         
-        /* Gambar Kontainer Universal */
-        .flexible-logo {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+        /* Gambar Responsive universal container */
+        .responsive-img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            display: block;
         }
 
-        /* Ukuran Kontainer Logo Countdown Diam (Fixed) */
-        .logo-countdown-box {
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Ukuran Foto Pasfoto 3x4 Siswa */
+        /* Foto 3x4 Siswa Resmi */
         .foto-3x4 {
-            width: 95px;
-            height: 126px;
+            width: 105px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 8px;
-        }
-        @media (min-width: 768px) {
-            .foto-3x4 {
-                width: 105px;
-                height: 140px;
-            }
+            border-radius: 6px;
         }
     </style>
 </head>
-<body id="bodyPortal" class="min-h-screen flex flex-col relative w-full">
+<body class="flex flex-col relative w-full min-h-screen">
 
-    <img id="bgBannerImage" alt="Background Banner Sekolah">
-    <div id="bgDarkenOverlay"></div>
+    <div class="bg-overlay"></div>
 
     <script>
         // =========================================================================
-        // JALUR REPOSITORI GITHUB (SUDAH DISESUAIKAN DENGAN STRUKTUR FOLDER GITHUB ANDA)
+        // JALUR URL RAW GITHUB USER (MEMAKAI RAW.GITHUBUSERCONTENT.COM BERESOLUSI TINGGI)
         // =========================================================================
-        const GITHUB_USER = "febriramadhan02"; 
-        const GITHUB_REPO = "lulus"; 
+        const BASE_ASSET_URL = "https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset";
 
-        // Pemanggilan disesuaikan: Folder "Asset" (A kapital) & Ekstensi Gambar (.PNG / .JPG kapital)
-        const LINK_LOGO_MAIN          = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/logo_main.PNG`;
-        const LINK_LOGO_COUNTDOWN     = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/logo_countdown.PNG`;
-        const LINK_BACKGROUND_BANNER  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/background.JPG`;
+        const LOGO_MAIN_URL      = `${BASE_ASSET_URL}/logo_main.png`;
+        const LOGO_COUNTDOWN_URL = `${BASE_ASSET_URL}/logo_countdown.png`;
 
         // Konfigurasi Database Firebase SDK v8
         const firebaseConfig = {
@@ -137,25 +117,29 @@
 
     <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none w-full max-w-[320px] md:max-w-sm"></div>
 
-    <header id="mainHeader" class="header-portal sticky top-0 z-40 shadow-md py-4 border-b w-full">
+    <header id="mainHeader" class="header-portal sticky top-0 z-40 shadow-md py-3.5 border-b w-full">
         <div class="max-w-6xl mx-auto px-4 md:px-6 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div id="logoContainer" class="max-w-[100px] md:max-w-[120px] h-[45px] flex items-center justify-center overflow-hidden"></div>
+            <div class="flex items-center gap-3.5">
+                <div class="w-[45px] h-[45px] overflow-hidden flex items-center justify-center">
+                    <img src="https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/logo_main.png" alt="Logo Main" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=SDS'">
+                </div>
                 <div>
-                    <h1 id="txtNamaSekolah" class="text-sm md:text-md font-bold text-title leading-tight tracking-tight">SDS NARADA</h1>
-                    <p id="txtSubNamaSekolah" class="text-[10px] md:text-xs text-muted font-medium">Portal Pengumuman Kelulusan Resmi</p>
+                    <h1 class="text-sm md:text-base font-bold text-title leading-tight tracking-tight">SDS NARADA</h1>
+                    <p class="text-[10px] md:text-xs text-muted font-medium">Portal Pengumuman Kelulusan Resmi</p>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16 flex-1 w-full flex items-center justify-center z-10">
+        
         <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-2xl p-6 md:p-8 text-center border my-6 max-w-xl mx-auto">
-            <div class="flex items-center justify-center mx-auto mb-5">
-                <div id="bannerCountdownContainer" class="logo-countdown-box"></div>
+            <div class="w-[90px] h-[90px] mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                <img src="https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/logo_countdown." alt="Logo Countdown" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/150x150/1e293b/ffffff?text=CLOCK'">
             </div>
-            <h2 id="txtJudulCountdown" class="text-lg md:text-xl font-bold text-title tracking-tight">Hitung Mundur Pengumuman</h2>
-            <p id="txtSubCountdown" class="text-[11px] md:text-xs text-muted mt-1 mb-6 md:mb-8 max-w-sm mx-auto">Gerbang login siswa otomatis terbuka begitu waktu hitung mundur di bawah ini mencapai nol.</p>
+            
+            <h2 class="text-lg md:text-xl font-bold text-title tracking-tight">Hitung Mundur Pengumuman</h2>
+            <p class="text-[11px] md:text-xs text-muted mt-1 mb-6 max-w-sm mx-auto">Gerbang login siswa otomatis terbuka begitu waktu hitung mundur di bawah ini mencapai nol.</p>
             
             <div class="flex justify-center gap-2 md:gap-3 font-bold mb-6">
                 <div class="input-field border p-2 md:p-3 rounded-xl w-16 md:w-20 shadow-sm">
@@ -175,12 +159,12 @@
                     <div class="text-[8px] md:text-[9px] text-muted font-bold uppercase tracking-wider mt-1">Detik</div>
                 </div>
             </div>
-            <p class="text-[11px] text-blue-300 font-medium bg-blue-950/50 py-2 px-4 rounded-xl border border-blue-900/40 inline-block">Silakan tunggu hingga waktu habis untuk melihat pengumuman.</p>
+            <p class="text-[11px] text-blue-300 font-medium bg-blue-950/40 py-2 px-4 rounded-xl border border-blue-900/30 inline-block">Silakan tunggu hingga waktu habis untuk melihat pengumuman.</p>
         </section>
 
         <section id="view-login" class="w-full hidden animate__animated animate__zoomIn card-main rounded-2xl shadow-2xl p-6 md:p-8 max-w-md mx-auto border">
-            <h2 id="txtJudulLogin" class="text-md md:text-lg font-bold text-title tracking-tight text-center mb-1">Masuk Portal Kelulusan</h2>
-            <p id="txtSubLogin" class="text-[11px] md:text-xs text-muted text-center mb-6">Gunakan NIS dan sandi resmi yang diberikan wali kelas Anda</p>
+            <h2 class="text-md md:text-lg font-bold text-title tracking-tight text-center mb-1">Masuk Portal Kelulusan</h2>
+            <p class="text-[11px] md:text-xs text-muted text-center mb-6">Gunakan NIS dan sandi resmi yang diberikan wali kelas Anda</p>
             <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-[11px] md:text-xs font-semibold text-muted mb-1.5">Nomor Induk Siswa (NIS)</label>
@@ -194,7 +178,7 @@
             </form>
         </section>
 
-        <section id="view-result" class="w-full hidden space-y-4 md:space-y-6 max-w-3xl mx-auto">
+        <section id="view-result" class="w-full hidden space-y-4 max-w-3xl mx-auto">
             <div class="flex justify-between items-center">
                 <button onclick="logoutSiswa()" class="text-xs bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-all cursor-pointer">← Keluar Sistem</button>
             </div>
@@ -218,7 +202,7 @@
             </div>
 
             <div id="tabContentSiswa" class="space-y-6">
-                <div class="p-4 md:p-5 bg-slate-50 border border-slate-200/60 rounded-xl">
+                <div class="p-4 bg-slate-50 border border-slate-200/60 rounded-xl">
                     <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3">Aksi Unggah & Ekspor Data</h3>
                     <div class="flex flex-wrap gap-2">
                         <button id="btnDownloadTemplate" class="bg-slate-800 hover:bg-slate-900 text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition flex-1 sm:flex-initial text-center cursor-pointer">Unduh Format Excel</button>
@@ -297,9 +281,9 @@
                     <div class="sm:col-span-2"><label class="block text-[11px] font-semibold text-slate-500 mb-1">URL Google Drive SKL (.pdf)</label><input type="url" id="m_skl" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs border-slate-200"></div>
                 </div>
                 <div class="border-t border-slate-100 pt-4 mt-2">
-                    <h4 class="text-xs font-bold text-slate-800 mb-3">Input Nilai Ujian Kelulusan (Gunakan Koma untuk Desimal):</h4>
+                    <h4 class="text-xs font-bold text-slate-800 mb-3">Input Nilai Ujian Kelulusan:</h4>
                     <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-slate-400">P. Agama</label><input type="text" id="n_agama" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">Agama</label><input type="text" id="n_agama" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
                         <div><label class="text-[10px] text-slate-400">PPKn</label><input type="text" id="n_ppkn" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
                         <div><label class="text-[10px] text-slate-400">B. Indo</label><input type="text" id="n_indo" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
                         <div><label class="text-[10px] text-slate-400">MTK</label><input type="text" id="n_mtk" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
@@ -323,33 +307,9 @@
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
 
-        // FUNGSI UTAMA UNTUK MERENDER BACKGROUND BANNER DAN LOGO GITHUB SECARA TOTAL & PRESISI
-        function renderCustomAssets() {
-            const logoContainer = document.getElementById('logoContainer');
-            const bannerContainer = document.getElementById('bannerCountdownContainer');
-            const bgImgElement = document.getElementById('bgBannerImage');
-            const darkenOverlay = document.getElementById('bgDarkenOverlay');
-
-            // Set langsung gambar ke elemen HTML
-            logoContainer.innerHTML = `<img src="${LINK_LOGO_MAIN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
-            bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-14 h-14 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700/60 shadow-inner\'><svg class=\'w-7 h-7\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
-
-            bgImgElement.src = LINK_BACKGROUND_BANNER;
-            bgImgElement.onload = function() {
-                bgImgElement.style.display = "block";
-                darkenOverlay.style.display = "block";
-            };
-            bgImgElement.onerror = function() {
-                bgImgElement.style.display = "none";
-                darkenOverlay.style.display = "none";
-                document.body.style.backgroundColor = "#0f172a";
-            };
-        }
-
-        // Ambil konfigurasi waktu resmi dari database Firebase Anda
+        // Mendengarkan perubahan konfigurasi waktu di Firebase
         db.ref('config/website').on('value', (snapshot) => {
             const cfg = snapshot.val() || {};
-            renderCustomAssets(); 
             if (cfg.targetWaktuString) {
                 targetCountdownDate = new Date(cfg.targetWaktuString).getTime();
                 document.getElementById('cfgTargetWaktu').value = cfg.targetWaktuString;
@@ -400,7 +360,6 @@
             } else if (viewId === 'result') {
                 document.getElementById('view-result').classList.remove('hidden');
             }
-            renderCustomAssets();
         }
 
         function showNotification(message, type = "success") {
@@ -491,8 +450,8 @@
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status === "LULUS";
             
-            // Perhatian folder foto: disesuaikan ke folder Asset (A Kapital)
-            let baseUrlFoto = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/Asset/foto_siswa/${s.nis}`;
+            // JALUR LINK STRUKTUR FOTO YANG SUDAH VALID 100% SESUAI GITHUB (Asset/foto_siswa/[nis]. atau .JPG)
+            let baseUrlFoto = `https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/foto_siswa/${s.nis}`;
 
             if (isLulus) {
                 resCard.className = "animate__animated animate__tada card-main rounded-2xl shadow-2xl p-6 md:p-8 border transition-all duration-500 w-full glow-success border-emerald-500/60 bg-emerald-950/30";
@@ -509,8 +468,8 @@
                 ` : ''}
 
                 <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left">
-                    <div class="foto-3x4 overflow-hidden border-2 border-slate-600/70 shadow-md shrink-0 mx-auto sm:mx-0 bg-slate-900 flex items-center justify-center">
-                        <img id="fotoSiswaHasil" src="${baseUrlFoto}.png" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e293b/ffffff?text=${s.nis}'}">
+                    <div class="foto-3x4 overflow-hidden border border-slate-600/70 shadow-md shrink-0 mx-auto sm:mx-0 bg-slate-900 flex items-center justify-center">
+                        <img id="fotoSiswaHasil" src="${baseUrlFoto}." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.JPG'; this.onerror=function(){this.src='${baseUrlFoto}.'; this.onerror=function(){this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e293b/ffffff?text=${s.nis}'}}}}">
                     </div>
                     <div class="flex-1 space-y-1">
                         <span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-900/60 text-blue-200 uppercase tracking-wider">${s.kelas || 'Umum'}</span>
@@ -526,7 +485,7 @@
                 <div class="border-t border-slate-700/60 my-6 pt-5">
                     <h4 class="text-xs font-bold text-title uppercase tracking-wider mb-3 text-center sm:text-left">📈 Transkrip Nilai Ujian</h4>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 text-xs">
-                        <div class="p-2 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between"><span>P. Agama:</span><b class="text-title">${formatNilaiTampil(s.nilai?.agama)}</b></div>
+                        <div class="p-2 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between"><span>Agama:</span><b class="text-title">${formatNilaiTampil(s.nilai?.agama)}</b></div>
                         <div class="p-2 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between"><span>PPKn:</span><b class="text-title">${formatNilaiTampil(s.nilai?.ppkn)}</b></div>
                         <div class="p-2 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between"><span>B. Indonesia:</span><b class="text-title">${formatNilaiTampil(s.nilai?.indonesia)}</b></div>
                         <div class="p-2 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between"><span>Matematika:</span><b class="text-title">${formatNilaiTampil(s.nilai?.matematika)}</b></div>
@@ -705,7 +664,7 @@
                         status: String(row["Status"]).toUpperCase().trim() === "LULUS" ? "LULUS" : "TIDAK LULUS",
                         linkSKL: row["Link SKL"] || "",
                         nilai: {
-                            agama: ambilNilaiAsliExcel(row["P. Agama"]),
+                            agama: ambilNilaiAsliExcel(row["Agama"]),
                             ppkn: ambilNilaiAsliExcel(row["PPKn"]),
                             indonesia: ambilNilaiAsliExcel(row["B. Indonesia"] || row["B. Indo"]),
                             matematika: ambilNilaiAsliExcel(row["Matematika"] || row["MTK"]),
@@ -731,7 +690,7 @@
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
             const template = [{
                 "Nama Lengkap Siswa": "Ahmad Dani", "NIS": "202601", "NISN": "00987123", "Password Siswa": "sandi123", "Tempat Tanggal Lahir": "Tangerang, 10 Mei 2014", "Pilih Kelas": "Kelas 6A", "Status": "LULUS", "Link SKL": "https://link-gdrive-skl.com",
-                "P. Agama": "95,70", "PPKn": "88,00", "B. Indonesia": "90,15", "Matematika": "82,50", "IPA": "85,00", "IPS": "80,00", "SBdP": "87,45", "PJOK": "90,00", "B. Inggris": "84,30"
+                "Agama": "95,70", "PPKn": "88,00", "B. Indonesia": "90,15", "Matematika": "82,50", "IPA": "85,00", "IPS": "80,00", "SBdP": "87,45", "PJOK": "90,00", "B. Inggris": "84,30"
             }];
             const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
@@ -749,7 +708,7 @@
                     const s = dataSiswa[key];
                     outputArray.push({
                         "Nama Siswa": s.nama, "NIS": s.nis, "NISN": s.nisn, "Password Siswa": s.password, "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL,
-                        "P. Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris || 0)
+                        "Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris || 0)
                     });
                 });
                 const ws = XLSX.utils.json_to_sheet(outputArray);
@@ -759,8 +718,6 @@
             });
         });
 
-        // Jalankan inisialisasi aset
-        renderCustomAssets();
         initCountdownEngine();
     </script>
 </body>
