@@ -14,37 +14,46 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #f8fafc; overflow-x: hidden; background-color: #0f172a; }
         .countdown-number { font-variant-numeric: tabular-nums; display: inline-block; text-align: center; }
-        .glow-success { box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25); animation: pulseGlow 3s infinite alternate; }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.15); }
-            100% { box-shadow: 0 0 35px 5px rgba(16, 185, 129, 0.3); }
+        
+        /* Animasi Glow Sukses (Lulus) */
+        .glow-success { 
+            box-shadow: 0 0 40px -5px rgba(16, 185, 129, 0.3); 
+            animation: pulseGlow 2.5s infinite alternate; 
         }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.2); }
+            100% { box-shadow: 0 0 45px 5px rgba(16, 185, 129, 0.45); }
+        }
+
         .card-main { background-color: rgba(23, 42, 70, 0.9); color: #f8fafc; border-color: #243b5e; backdrop-filter: blur(8px); }
         .text-title { color: #ffffff; }
         .text-muted { color: #94a3b8; }
         .input-field { background-color: #1e3557; color: #ffffff; border-color: #2e4e7c; }
         .header-portal { background-color: rgba(23, 42, 70, 0.85); border-color: rgba(36, 59, 94, 0.6); backdrop-filter: blur(8px); }
 
-        /* Background Utama Sekolah - Bersifat Diam (Fixed) */
+        /* Background Utama Sekolah - Fixed, Diam & Responsif */
         #bgBannerOverlay { 
             position: fixed; 
             inset: 0; 
             background-size: cover; 
             background-position: center; 
-            background-attachment: fixed; /* Membuat background diam tidak bergerak */
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             z-index: -2; 
+            display: none; 
         }
-        /* Lapisan Kegelapan agar teks di depan tetap terbaca jelas */
+        /* Lapisan Kegelapan agar tulisan kontras */
         #bgDarkenOverlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.85);
             z-index: -1;
+            display: none;
         }
         
-        /* Gaya Logo Fleksibel */
+        /* Logo Gambar Kontainer Universal */
         .flexible-logo {
             max-width: 100%;
             max-height: 100%;
@@ -55,12 +64,21 @@
             border: none;
         }
 
-        /* Ukuran Foto Pas 3x4 Standar Indonesia */
-        .foto-3x4 {
+        /* Ukuran Kontainer Logo Countdown yang Pas, Ideal, Rapi, & FIXED DIAM */
+        .logo-countdown-box {
             width: 90px;
-            height: 120px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ukuran Foto Pas Pasfoto 3x4 */
+        .foto-3x4 {
+            width: 95px;
+            height: 126px;
             object-fit: cover;
-            border-radius: 6px;
+            border-radius: 8px;
         }
         @media (min-width: 768px) {
             .foto-3x4 {
@@ -77,16 +95,14 @@
 
     <script>
         // =========================================================================
-        // JALUR UTAMA ASSET GITHUB (GANTI USERNAME_ANDA & REPOS_ANDA SESUAI AKUN ANDA)
+        // JALUR REPOSITORI GITHUB (PASTIKAN USERNAME & REPO DI BAWAH INI BENAR)
         // =========================================================================
-        const GITHUB_USER = "andresiahaan31";
-        const GITHUB_REPO = "portal-pengumuman-kelulusan-sds-narada";
+        const GITHUB_USER = "febriramadhan02"; 
+        const GITHUB_REPO = "lulus"; 
 
-        // Kedua Tampilan menggunakan logo sekolah yang sama (logo_main.png)
-        const LINK_LOGO_COUNTDOWN = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
-        const LINK_LOGO_UTAMA_SEKOLAH = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
-        
-        // Background Web Utama (Gambar Sekolah)
+        // Pemanggilan berkas aset resmi dari repositori GitHub Anda
+        const LINK_LOGO_MAIN          = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
+        const LINK_LOGO_COUNTDOWN     = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_countdown.png`;
         const LINK_BACKGROUND_BANNER  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/background.jpg`;
 
         // Konfigurasi Database Firebase SDK v8
@@ -115,7 +131,7 @@
                 <div id="logoContainer" class="max-w-[100px] md:max-w-[120px] h-[45px] flex items-center justify-center overflow-hidden"></div>
                 <div>
                     <h1 id="txtNamaSekolah" class="text-sm md:text-md font-bold text-title leading-tight tracking-tight">SDS NARADA</h1>
-                    <p id="txtSubNamaSekolah" class="text-[10px] md:text-xs text-muted font-medium">Portal Pengumuman Kelulusan</p>
+                    <p id="txtSubNamaSekolah" class="text-[10px] md:text-xs text-muted font-medium">Portal Pengumuman Kelulusan Resmi</p>
                 </div>
             </div>
         </div>
@@ -123,7 +139,9 @@
 
     <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16 flex-1 w-full flex items-center justify-center">
         <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-xl p-6 md:p-8 text-center border my-6 max-w-xl mx-auto bg-opacity-95">
-            <div id="bannerCountdownContainer" class="flex items-center justify-center mx-auto mb-5 max-h-[90px] max-w-[90px]"></div>
+            <div class="flex items-center justify-center mx-auto mb-5">
+                <div id="bannerCountdownContainer" class="logo-countdown-box"></div>
+            </div>
             <h2 id="txtJudulCountdown" class="text-lg md:text-xl font-bold text-title tracking-tight">Hitung Mundur Pengumuman</h2>
             <p id="txtSubCountdown" class="text-[11px] md:text-xs text-muted mt-1 mb-6 md:mb-8 max-w-sm mx-auto">Gerbang login siswa otomatis terbuka begitu waktu hitung mundur di bawah ini mencapai nol.</p>
             
@@ -164,11 +182,11 @@
             </form>
         </section>
 
-        <section id="view-result" class="w-full hidden space-y-4 md:space-y-6 animate__animated animate__fadeInUp max-w-3xl mx-auto">
+        <section id="view-result" class="w-full hidden space-y-4 md:space-y-6 max-w-3xl mx-auto">
             <div class="flex justify-between items-center">
                 <button onclick="logoutSiswa()" class="text-xs bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-all cursor-pointer">← Keluar Sistem</button>
             </div>
-            <div id="resultCard" class="card-main rounded-2xl shadow-lg p-5 md:p-8 border transition-all duration-500 w-full"></div>
+            <div id="resultCard" class="w-full"></div>
         </section>
 
         <section id="view-admin" class="w-full hidden animate__animated animate__fadeIn bg-white rounded-2xl shadow-xl p-4 md:p-6 border border-slate-200 text-slate-800 max-w-5xl mx-auto">
@@ -293,37 +311,50 @@
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
 
+        // FUNGSI UTAMA UNTUK MERENDER BACKGROUND DAN LOGO GITHUB SECARA AMAN
         function renderCustomAssets() {
             const logoContainer = document.getElementById('logoContainer');
-            let activeLogoUrl = document.getElementById('view-countdown').classList.contains('hidden') 
-                                ? LINK_LOGO_UTAMA_SEKOLAH 
-                                : LINK_LOGO_COUNTDOWN;
-
-            if (typeof activeLogoUrl !== 'undefined' && activeLogoUrl.trim() !== "" && !activeLogoUrl.includes("USERNAME_ANDA")) {
-                logoContainer.innerHTML = `<img src="${activeLogoUrl}" class="flexible-logo" onerror="this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
-            } else {
-                logoContainer.innerHTML = `<div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md">N</div>`;
-            }
-
-            // Sekarang Tampilan Countdown Menggunakan Logo Sekolah yang Sama
             const bannerContainer = document.getElementById('bannerCountdownContainer');
-            if (typeof LINK_LOGO_COUNTDOWN !== 'undefined' && LINK_LOGO_COUNTDOWN.trim() !== "" && !LINK_LOGO_COUNTDOWN.includes("USERNAME_ANDA")) {
-                bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo animate__animated animate__pulse animate__infinite" onerror="this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700\'><svg class=\'w-6 h-6\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
-            } else {
-                bannerContainer.innerHTML = `<div class="w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700"><svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
-            }
-
-            // Background Utama Sekolah Tetap Menetap Secara Global
             const bgOverlay = document.getElementById('bgBannerOverlay');
-            if (typeof LINK_BACKGROUND_BANNER !== 'undefined' && LINK_BACKGROUND_BANNER.trim() !== "" && !LINK_BACKGROUND_BANNER.includes("USERNAME_ANDA")) {
-                bgOverlay.style.backgroundImage = `url('${LINK_BACKGROUND_BANNER}')`;
+            const darkenOverlay = document.getElementById('bgDarkenOverlay');
+
+            // Validasi apakah jalur GitHub sudah disesuaikan pemilik berkas
+            const isDefaultUser = (!GITHUB_USER || GITHUB_USER.trim() === "" || GITHUB_USER.includes("USERNAME_ANDA"));
+
+            if (!isDefaultUser) {
+                // Pasang Logo Header Resmi
+                logoContainer.innerHTML = `<img src="${LINK_LOGO_MAIN}" class="flexible-logo" onerror="this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
+                
+                // Pasang Logo Countdown Khusus (Fixed Diam Sesuai Permintaan)
+                bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo" onerror="this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700\'><svg class=\'w-6 h-6\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
+
+                // Logika Pengecekan Keberadaan File Banner Background Sekolah
+                const cekGambar = new Image();
+                cekGambar.src = LINK_BACKGROUND_BANNER;
+                cekGambar.onload = function() {
+                    // Jika file background.jpg ditemukan dan terunggah di GitHub
+                    bgOverlay.style.backgroundImage = `url('${LINK_BACKGROUND_BANNER}')`;
+                    bgOverlay.style.display = "block";
+                    darkenOverlay.style.display = "block";
+                };
+                cekGambar.onerror = function() {
+                    // Jika file background tidak ada di GitHub, amankan dengan fallback solid color default
+                    bgOverlay.style.display = "none";
+                    darkenOverlay.style.display = "none";
+                };
             } else {
-                bgOverlay.style.backgroundImage = 'none';
+                // Tampilan Darurat jika folder tidak terbaca
+                logoContainer.innerHTML = `<div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md">N</div>`;
+                bannerContainer.innerHTML = `<div class="w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
+                bgOverlay.style.display = "none";
+                darkenOverlay.style.display = "none";
             }
         }
 
+        // Ambil konfigurasi waktu dari database Firebase
         db.ref('config/website').on('value', (snapshot) => {
             const cfg = snapshot.val() || {};
+            // Jalankan render asset setelah konfigurasi Firebase sukses dimuat
             renderCustomAssets(); 
             if (cfg.targetWaktuString) {
                 targetCountdownDate = new Date(cfg.targetWaktuString).getTime();
@@ -457,21 +488,33 @@
             switchView('countdown');
         }
 
-        // Memastikan Nilai yang Muncul Desimalnya Utuh Sesuai Excel
         function formatNilaiTampil(val) {
             if (val === undefined || val === null || val === "") return "0";
-            let str = String(val).trim();
-            return str;
+            return String(val).trim();
         }
 
+        // RENDERING KARTU KELULUSAN DENGAN ANIMASI DAN TEKS SESUAI GAMBAR ACUAN
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status === "LULUS";
             
             let baseUrlFoto = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/foto_siswa/${s.nis}`;
 
-            resCard.className = `card-main rounded-2xl shadow-xl p-6 md:p-8 border transition-all duration-500 w-full ${isLulus ? 'glow-success border-emerald-500 bg-emerald-950/20' : 'border-rose-500 bg-rose-950/20'}`;
+            // Mengatur tipe animasi berdasarkan keputusan kelulusannya
+            if (isLulus) {
+                resCard.className = "animate__animated animate__tada card-main rounded-2xl shadow-xl p-6 md:p-8 border transition-all duration-500 w-full glow-success border-emerald-500 bg-emerald-950/20";
+            } else {
+                resCard.className = "animate__animated animate__fadeInUp card-main rounded-2xl shadow-xl p-6 md:p-8 border transition-all duration-500 w-full border-rose-500 bg-rose-950/20";
+            }
+
             resCard.innerHTML = `
+                ${isLulus ? `
+                <div class="text-center mb-6 animate__animated animate__bounceInDown animate__delay-1s">
+                    <h4 class="text-emerald-400 font-extrabold text-xl md:text-2xl tracking-wide uppercase drop-shadow-md">🎉 Selamat & Sukses! 🎉</h4>
+                    <p class="text-xs text-emerald-200/80 mt-1 font-medium">Anda dinyatakan LULUS dari jenjang pendidikan sekolah dasar.</p>
+                </div>
+                ` : ''}
+
                 <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left">
                     <div class="foto-3x4 overflow-hidden border-2 border-slate-600 shadow-sm shrink-0 mx-auto sm:mx-0 bg-slate-900 flex items-center justify-center">
                         <img id="fotoSiswaHasil" src="${baseUrlFoto}.png" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e3557/ffffff?text=${s.nis}'}">
@@ -513,7 +556,7 @@
                 tbody.innerHTML = "";
                 const data = snapshot.val();
                 if(!data) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data siswa. Klik "+ Tambah Manual" atau unggah berkas Excel.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data siswa.</td></tr>`;
                     return;
                 }
 
@@ -552,7 +595,6 @@
             return s === "" ? "0" : s;
         }
 
-        // Menyimpan nilai manual apa adanya agar string desimal koma tidak rusak
         function simpanSiswaManual(e) {
             e.preventDefault();
             const key = document.getElementById('m_key_id').value;
@@ -639,7 +681,6 @@
             });
         }
 
-        // Mengambil teks asli dari Excel tanpa merusak format tulisan berkoma
         function ambilNilaiAsliExcel(val) {
             if (val === undefined || val === null || val === "") return "0";
             return String(val).trim();
@@ -655,7 +696,6 @@
                 const workbook = XLSX.read(data, { type: 'binary' });
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
-                // raw: true memastikan format string teks angka berkoma terbaca utuh asli
                 const rows = XLSX.utils.sheet_to_json(sheet, { raw: false });
 
                 if(rows.length === 0) return showNotification("Berkas Excel kosong!", "error");
@@ -726,6 +766,7 @@
             });
         });
 
+        // Jalankan inisialisasi awal
         renderCustomAssets();
         initCountdownEngine();
     </script>
