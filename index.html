@@ -22,7 +22,7 @@
             padding: 0;
             min-h: 100vh;
             /* KONSEP BARU: Background Gambar Utama langsung dipasang di Body secara Fullscreen */
-            background-image: url('https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/background.JPG');
+            background-image: url('https://raw.githubusercontent.com/febriramadhan02/lulus/main/asset/background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -92,7 +92,8 @@
         // =========================================================================
         // JALUR URL RAW GITHUB USER (MEMAKAI RAW.GITHUBUSERCONTENT.COM BERESOLUSI TINGGI)
         // =========================================================================
-        const BASE_ASSET_URL = "https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset";
+        const BASE_ASSET_URL = "https://raw.githubusercontent.com/andresiahaan/portal-pengumuman-kelulusan-sds-narada
+/main/asset";
 
         const LOGO_MAIN_URL      = `${BASE_ASSET_URL}/logo_main.png`;
         const LOGO_COUNTDOWN_URL = `${BASE_ASSET_URL}/logo_countdown.png`;
@@ -121,7 +122,7 @@
         <div class="max-w-6xl mx-auto px-4 md:px-6 flex justify-between items-center">
             <div class="flex items-center gap-3.5">
                 <div class="w-[45px] h-[45px] overflow-hidden flex items-center justify-center">
-                    <img src="https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/logo_main.png" alt="Logo Main" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=SDS'">
+                    <img src="https://raw.githubusercontent.com/andresiahaan31/portal-pengumuman-kelulusan-sds-narada/main/asset/logo_main.png" alt="Logo Main" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=SDS'">
                 </div>
                 <div>
                     <h1 class="text-sm md:text-base font-bold text-title leading-tight tracking-tight">SDS NARADA</h1>
@@ -135,7 +136,7 @@
         
         <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-2xl p-6 md:p-8 text-center border my-6 max-w-xl mx-auto">
             <div class="w-[90px] h-[90px] mx-auto mb-4 flex items-center justify-center overflow-hidden">
-                <img src="https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/logo_countdown." alt="Logo Countdown" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/150x150/1e293b/ffffff?text=CLOCK'">
+                <img src="https://raw.githubusercontent.com/andresiahaan31/portal-pengumuman-kelulusan-sds-narada/main/asset/logo_countdown." alt="Logo Countdown" class="responsive-img" onerror="this.onerror=null; this.src='https://placehold.co/150x150/1e293b/ffffff?text=CLOCK'">
             </div>
             
             <h2 class="text-lg md:text-xl font-bold text-title tracking-tight">Hitung Mundur Pengumuman</h2>
@@ -450,8 +451,8 @@
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status === "LULUS";
             
-            // JALUR LINK STRUKTUR FOTO YANG SUDAH VALID 100% SESUAI GITHUB (Asset/foto_siswa/[nis]. atau .JPG)
-            let baseUrlFoto = `https://raw.githubusercontent.com/febriramadhan02/lulus/main/Asset/foto_siswa/${s.nis}`;
+            // JALUR LINK STRUKTUR FOTO YANG SUDAH VALID 100% SESUAI GITHUB (asset/foto_siswa/[nis]. atau .jpg)
+            let baseUrlFoto = `https://raw.githubusercontent.com/febriramadhan02/lulus/main/asset/foto_siswa/${s.nis}`;
 
             if (isLulus) {
                 resCard.className = "animate__animated animate__tada card-main rounded-2xl shadow-2xl p-6 md:p-8 border transition-all duration-500 w-full glow-success border-emerald-500/60 bg-emerald-950/30";
@@ -469,7 +470,7 @@
 
                 <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left">
                     <div class="foto-3x4 overflow-hidden border border-slate-600/70 shadow-md shrink-0 mx-auto sm:mx-0 bg-slate-900 flex items-center justify-center">
-                        <img id="fotoSiswaHasil" src="${baseUrlFoto}." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.JPG'; this.onerror=function(){this.src='${baseUrlFoto}.'; this.onerror=function(){this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e293b/ffffff?text=${s.nis}'}}}}">
+                        <img id="fotoSiswaHasil" src="${baseUrlFoto}." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='${baseUrlFoto}.'; this.onerror=function(){this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e293b/ffffff?text=${s.nis}'}}}}">
                     </div>
                     <div class="flex-1 space-y-1">
                         <span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-900/60 text-blue-200 uppercase tracking-wider">${s.kelas || 'Umum'}</span>
