@@ -14,21 +14,35 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f1e36; color: #f8fafc; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #f8fafc; overflow-x: hidden; }
         .countdown-number { font-variant-numeric: tabular-nums; display: inline-block; text-align: center; }
         .glow-success { box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25); animation: pulseGlow 3s infinite alternate; }
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.15); }
             100% { box-shadow: 0 0 35px 5px rgba(16, 185, 129, 0.3); }
         }
-        .card-main { background-color: #172a46; color: #f8fafc; border-color: #243b5e; }
+        .card-main { background-color: rgba(23, 42, 70, 0.9); color: #f8fafc; border-color: #243b5e; backdrop-filter: blur(8px); }
         .text-title { color: #ffffff; }
         .text-muted { color: #94a3b8; }
         .input-field { background-color: #1e3557; color: #ffffff; border-color: #2e4e7c; }
-        .header-portal { background-color: rgba(23, 42, 70, 0.8); border-color: rgba(36, 59, 94, 0.6); }
+        .header-portal { background-color: rgba(23, 42, 70, 0.85); border-color: rgba(36, 59, 94, 0.6); backdrop-filter: blur(8px); }
 
-        #bgBannerOverlay { position: fixed; inset: 0; background-size: cover; background-position: center; z-index: -1; transition: all 0.5s ease; }
-        .has-banner #bgBannerOverlay::after { content: ''; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(2px); }
+        /* Background Utama Sekolah - Bersifat Diam (Fixed) */
+        #bgBannerOverlay { 
+            position: fixed; 
+            inset: 0; 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; /* Membuat background diam tidak bergerak */
+            z-index: -2; 
+        }
+        /* Lapisan Kegelapan agar teks di depan tetap terbaca jelas */
+        #bgDarkenOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            z-index: -1;
+        }
         
         /* Gaya Logo Fleksibel */
         .flexible-logo {
@@ -37,14 +51,29 @@
             width: auto;
             height: auto;
             display: block;
-            background-color: transparent; /* Pastikan background transparan */
-            border: none; /* Hapus border default */
+            background-color: transparent;
+            border: none;
+        }
+
+        /* Ukuran Foto Pas 3x4 Standar Indonesia */
+        .foto-3x4 {
+            width: 90px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        @media (min-width: 768px) {
+            .foto-3x4 {
+                width: 105px;
+                height: 140px;
+            }
         }
     </style>
 </head>
 <body id="bodyPortal" class="min-h-screen flex flex-col relative w-full">
 
     <div id="bgBannerOverlay"></div>
+    <div id="bgDarkenOverlay"></div>
 
     <script>
         // =========================================================================
@@ -53,13 +82,11 @@
         const GITHUB_USER = "andresiahaan31";
         const GITHUB_REPO = "portal-pengumuman-kelulusan-sds-narada";
 
-        // Tampilan 1 (Countdown): Gunakan logo_countdown.png
-        const LINK_LOGO_COUNTDOWN = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_countdown.png`;
-        // Tampilan 2 (Login & Hasil): Gunakan logo_main.png
+        // Kedua Tampilan menggunakan logo sekolah yang sama (logo_main.png)
+        const LINK_LOGO_COUNTDOWN = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
         const LINK_LOGO_UTAMA_SEKOLAH = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/logo_main.png`;
         
-        // Banner dan Background tetap sama
-        const LINK_LOGO_LOGIN_SISWA   = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/banner.png`; 
+        // Background Web Utama (Gambar Sekolah)
         const LINK_BACKGROUND_BANNER  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/background.jpg`;
 
         // Konfigurasi Database Firebase SDK v8
@@ -82,25 +109,25 @@
 
     <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none w-full max-w-[320px] md:max-w-sm"></div>
 
-    <header id="mainHeader" class="header-portal backdrop-blur-md sticky top-0 z-40 shadow-sm py-4 border-b w-full">
+    <header id="mainHeader" class="header-portal sticky top-0 z-40 shadow-sm py-4 border-b w-full">
         <div class="max-w-6xl mx-auto px-4 md:px-6 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div id="logoContainer" class="max-w-[100px] md:max-w-[120px] h-[45px] flex items-center justify-center overflow-hidden"></div>
                 <div>
                     <h1 id="txtNamaSekolah" class="text-sm md:text-md font-bold text-title leading-tight tracking-tight">SDS NARADA</h1>
-                    <p id="txtSubNamaSekolah" class="text-[10px] md:text-xs text-muted font-medium">SDS Portal Pengumuman Kelulusan</p>
+                    <p id="txtSubNamaSekolah" class="text-[10px] md:text-xs text-muted font-medium">Portal Pengumuman Kelulusan</p>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16 flex-1 w-full flex items-center justify-center">
-        <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-xl p-6 md:p-8 text-center border my-6 max-w-xl mx-auto backdrop-blur-md bg-opacity-95">
-            <div id="bannerCountdownContainer" class="flex items-center justify-center mx-auto mb-5 max-h-[100px]"></div>
+        <section id="view-countdown" class="w-full animate__animated animate__fadeIn card-main rounded-2xl shadow-xl p-6 md:p-8 text-center border my-6 max-w-xl mx-auto bg-opacity-95">
+            <div id="bannerCountdownContainer" class="flex items-center justify-center mx-auto mb-5 max-h-[90px] max-w-[90px]"></div>
             <h2 id="txtJudulCountdown" class="text-lg md:text-xl font-bold text-title tracking-tight">Hitung Mundur Pengumuman</h2>
             <p id="txtSubCountdown" class="text-[11px] md:text-xs text-muted mt-1 mb-6 md:mb-8 max-w-sm mx-auto">Gerbang login siswa otomatis terbuka begitu waktu hitung mundur di bawah ini mencapai nol.</p>
             
-            <div class="flex justify-center gap-2 md:gap-3 font-bold">
+            <div class="flex justify-center gap-2 md:gap-3 font-bold mb-6">
                 <div class="input-field border p-2 md:p-3 rounded-xl w-16 md:w-20 shadow-xs">
                     <span id="cd-days" class="countdown-number text-2xl md:text-3xl font-bold">00</span>
                     <div class="text-[8px] md:text-[9px] text-muted font-bold uppercase tracking-wider mt-1">Hari</div>
@@ -118,9 +145,10 @@
                     <div class="text-[8px] md:text-[9px] text-muted font-bold uppercase tracking-wider mt-1">Detik</div>
                 </div>
             </div>
+            <p class="text-[11px] text-blue-300 font-medium bg-blue-950/40 py-2 px-4 rounded-xl border border-blue-900/30 inline-block">Silakan tunggu hingga waktu habis untuk melihat pengumuman.</p>
         </section>
 
-        <section id="view-login" class="w-full hidden animate__animated animate__zoomIn card-main rounded-2xl shadow-xl p-6 md:p-8 max-w-md mx-auto border backdrop-blur-md bg-opacity-95">
+        <section id="view-login" class="w-full hidden animate__animated animate__zoomIn card-main rounded-2xl shadow-xl p-6 md:p-8 max-w-md mx-auto border bg-opacity-95">
             <h2 id="txtJudulLogin" class="text-md md:text-lg font-bold text-title tracking-tight text-center mb-1">Masuk Portal Kelulusan</h2>
             <p id="txtSubLogin" class="text-[11px] md:text-xs text-muted text-center mb-6">Gunakan NIS dan sandi resmi yang diberikan wali kelas Anda</p>
             <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
@@ -239,17 +267,17 @@
                     <div class="sm:col-span-2"><label class="block text-[11px] font-semibold text-slate-500 mb-1">URL Google Drive SKL (.pdf)</label><input type="url" id="m_skl" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs border-slate-200"></div>
                 </div>
                 <div class="border-t border-slate-100 pt-4 mt-2">
-                    <h4 class="text-xs font-bold text-slate-800 mb-3">Input Nilai Ujian Kelulusan:</h4>
+                    <h4 class="text-xs font-bold text-slate-800 mb-3">Input Nilai Ujian Kelulusan (Gunakan Koma untuk Desimal):</h4>
                     <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-slate-400">P. Agama</label><input type="text" id="n_agama" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">PPKn</label><input type="text" id="n_ppkn" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">B. Indo</label><input type="text" id="n_indo" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">MTK</label><input type="text" id="n_mtk" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">IPA</label><input type="text" id="n_ipa" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">IPS</label><input type="text" id="n_ips" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">SBdP</label><input type="text" id="n_sbdp" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">PJOK</label><input type="text" id="n_pjok" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">B. Inggris</label><input type="text" id="n_ing" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
+                        <div><label class="text-[10px] text-slate-400">P. Agama</label><input type="text" id="n_agama" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">PPKn</label><input type="text" id="n_ppkn" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">B. Indo</label><input type="text" id="n_indo" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">MTK</label><input type="text" id="n_mtk" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">IPA</label><input type="text" id="n_ipa" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">IPS</label><input type="text" id="n_ips" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">SBdP</label><input type="text" id="n_sbdp" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">PJOK</label><input type="text" id="n_pjok" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
+                        <div><label class="text-[10px] text-slate-400">B. Inggris</label><input type="text" id="n_ing" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="00,00"></div>
                     </div>
                 </div>
                 <div class="flex justify-end gap-2 border-t pt-4">
@@ -267,32 +295,30 @@
 
         function renderCustomAssets() {
             const logoContainer = document.getElementById('logoContainer');
-            // Pilih logo berdasarkan tampilan aktif
             let activeLogoUrl = document.getElementById('view-countdown').classList.contains('hidden') 
                                 ? LINK_LOGO_UTAMA_SEKOLAH 
                                 : LINK_LOGO_COUNTDOWN;
 
             if (typeof activeLogoUrl !== 'undefined' && activeLogoUrl.trim() !== "" && !activeLogoUrl.includes("USERNAME_ANDA")) {
-                logoContainer.innerHTML = `<img src="${activeLogoUrl}" class="flexible-logo flexible-logo-h-full flexible-logo-object-contain" onerror="this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
+                logoContainer.innerHTML = `<img src="${activeLogoUrl}" class="flexible-logo" onerror="this.parentNode.innerHTML='<div class=\'w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md\'>N</div>'">`;
             } else {
                 logoContainer.innerHTML = `<div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-md shadow-md">N</div>`;
             }
 
+            // Sekarang Tampilan Countdown Menggunakan Logo Sekolah yang Sama
             const bannerContainer = document.getElementById('bannerCountdownContainer');
-            if (typeof LINK_LOGO_LOGIN_SISWA !== 'undefined' && LINK_LOGO_LOGIN_SISWA.trim() !== "" && !LINK_LOGO_LOGIN_SISWA.includes("USERNAME_ANDA")) {
-                bannerContainer.innerHTML = `<img src="${LINK_LOGO_LOGIN_SISWA}" class="max-h-[85px] flexible-logo flexible-logo-object-contain animate__animated animate__pulse animate__infinite" onerror="this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700\'><svg class=\'w-6 h-6\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
+            if (typeof LINK_LOGO_COUNTDOWN !== 'undefined' && LINK_LOGO_COUNTDOWN.trim() !== "" && !LINK_LOGO_COUNTDOWN.includes("USERNAME_ANDA")) {
+                bannerContainer.innerHTML = `<img src="${LINK_LOGO_COUNTDOWN}" class="flexible-logo animate__animated animate__pulse animate__infinite" onerror="this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700\'><svg class=\'w-6 h-6\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\'></path></svg></div>'">`;
             } else {
                 bannerContainer.innerHTML = `<div class="w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center border border-slate-700"><svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
             }
 
+            // Background Utama Sekolah Tetap Menetap Secara Global
             const bgOverlay = document.getElementById('bgBannerOverlay');
-            const bodyPortal = document.getElementById('bodyPortal');
             if (typeof LINK_BACKGROUND_BANNER !== 'undefined' && LINK_BACKGROUND_BANNER.trim() !== "" && !LINK_BACKGROUND_BANNER.includes("USERNAME_ANDA")) {
                 bgOverlay.style.backgroundImage = `url('${LINK_BACKGROUND_BANNER}')`;
-                bodyPortal.classList.add('has-banner');
             } else {
                 bgOverlay.style.backgroundImage = 'none';
-                bodyPortal.classList.remove('has-banner');
             }
         }
 
@@ -349,7 +375,6 @@
             } else if (viewId === 'result') {
                 document.getElementById('view-result').classList.remove('hidden');
             }
-            // Update logo saat berganti tampilan
             renderCustomAssets();
         }
 
@@ -432,11 +457,11 @@
             switchView('countdown');
         }
 
+        // Memastikan Nilai yang Muncul Desimalnya Utuh Sesuai Excel
         function formatNilaiTampil(val) {
             if (val === undefined || val === null || val === "") return "0";
-            let str = String(val).replace(',', '.');
-            let num = parseFloat(str);
-            return isNaN(num) ? "0" : str.replace('.', ',');
+            let str = String(val).trim();
+            return str;
         }
 
         function renderHasilSiswaCard(s) {
@@ -448,7 +473,9 @@
             resCard.className = `card-main rounded-2xl shadow-xl p-6 md:p-8 border transition-all duration-500 w-full ${isLulus ? 'glow-success border-emerald-500 bg-emerald-950/20' : 'border-rose-500 bg-rose-950/20'}`;
             resCard.innerHTML = `
                 <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left">
-                    <img id="fotoSiswaHasil" src="${baseUrlFoto}.png" class="w-24 h-32 md:w-28 md:h-36 flexible-logo flexible-logo-object-cover rounded-lg border-2 border-slate-600 shadow-sm shrink-0 mx-auto sm:mx-0" onerror="this.onerror=null; this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e3557/ffffff?text=${s.nis}'}">
+                    <div class="foto-3x4 overflow-hidden border-2 border-slate-600 shadow-sm shrink-0 mx-auto sm:mx-0 bg-slate-900 flex items-center justify-center">
+                        <img id="fotoSiswaHasil" src="${baseUrlFoto}.png" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${baseUrlFoto}.jpg'; this.onerror=function(){this.src='https://placehold.co/150x200/1e3557/ffffff?text=${s.nis}'}">
+                    </div>
                     <div class="flex-1 space-y-1">
                         <span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-900 text-blue-200 uppercase tracking-wider">${s.kelas || 'Umum'}</span>
                         <h3 class="text-base md:text-lg font-bold text-title tracking-tight mt-1">${s.nama}</h3>
@@ -520,11 +547,12 @@
             document.getElementById('modalSiswa').classList.add('hidden'); 
         }
 
-        function dapatkanNilaiFloat(idInput) {
-            let s = document.getElementById(idInput).value.trim().replace(',', '.');
-            return s === "" ? 0 : (isNaN(parseFloat(s)) ? 0 : s);
+        function formatNilaiDariInput(idInput) {
+            let s = document.getElementById(idInput).value.trim();
+            return s === "" ? "0" : s;
         }
 
+        // Menyimpan nilai manual apa adanya agar string desimal koma tidak rusak
         function simpanSiswaManual(e) {
             e.preventDefault();
             const key = document.getElementById('m_key_id').value;
@@ -538,15 +566,15 @@
                 status: document.getElementById('m_status').value,
                 linkSKL: document.getElementById('m_skl').value.trim(),
                 nilai: {
-                    agama: dapatkanNilaiFloat('n_agama'),
-                    ppkn: dapatkanNilaiFloat('n_ppkn'),
-                    indonesia: dapatkanNilaiFloat('n_indo'),
-                    matematika: dapatkanNilaiFloat('n_mtk'),
-                    ipa: dapatkanNilaiFloat('n_ipa'),
-                    ips: dapatkanNilaiFloat('n_ips'),
-                    sbdp: dapatkanNilaiFloat('n_sbdp'),
-                    pjok: dapatkanNilaiFloat('n_pjok'),
-                    inggris: dapatkanNilaiFloat('n_ing')
+                    agama: formatNilaiDariInput('n_agama'),
+                    ppkn: formatNilaiDariInput('n_ppkn'),
+                    indonesia: formatNilaiDariInput('n_indo'),
+                    matematika: formatNilaiDariInput('n_mtk'),
+                    ipa: formatNilaiDariInput('n_ipa'),
+                    ips: formatNilaiDariInput('n_ips'),
+                    sbdp: formatNilaiDariInput('n_sbdp'),
+                    pjok: formatNilaiDariInput('n_pjok'),
+                    inggris: formatNilaiDariInput('n_ing')
                 }
             };
 
@@ -577,15 +605,15 @@
                 document.getElementById('m_status').value = s.status || 'LULUS';
                 document.getElementById('m_skl').value = s.linkSKL || '';
                 
-                document.getElementById('n_agama').value = String(s.nilai?.agama || 0).replace('.', ',');
-                document.getElementById('n_ppkn').value = String(s.nilai?.ppkn || 0).replace('.', ',');
-                document.getElementById('n_indo').value = String(s.nilai?.indonesia || 0).replace('.', ',');
-                document.getElementById('n_mtk').value = String(s.nilai?.matematika || 0).replace('.', ',');
-                document.getElementById('n_ipa').value = String(s.nilai?.ipa || 0).replace('.', ',');
-                document.getElementById('n_ips').value = String(s.nilai?.ips || 0).replace('.', ',');
-                document.getElementById('n_sbdp').value = String(s.nilai?.sbdp || 0).replace('.', ',');
-                document.getElementById('n_pjok').value = String(s.nilai?.pjok || 0).replace('.', ',');
-                document.getElementById('n_ing').value = String(s.nilai?.inggris || 0).replace('.', ',');
+                document.getElementById('n_agama').value = formatNilaiTampil(s.nilai?.agama);
+                document.getElementById('n_ppkn').value = formatNilaiTampil(s.nilai?.ppkn);
+                document.getElementById('n_indo').value = formatNilaiTampil(s.nilai?.indonesia);
+                document.getElementById('n_mtk').value = formatNilaiTampil(s.nilai?.matematika);
+                document.getElementById('n_ipa').value = formatNilaiTampil(s.nilai?.ipa);
+                document.getElementById('n_ips').value = formatNilaiTampil(s.nilai?.ips);
+                document.getElementById('n_sbdp').value = formatNilaiTampil(s.nilai?.sbdp);
+                document.getElementById('n_pjok').value = formatNilaiTampil(s.nilai?.pjok);
+                document.getElementById('n_ing').value = formatNilaiTampil(s.nilai?.inggris);
 
                 document.getElementById('modalSiswaTitle').innerText = "📝 Edit Data Siswa";
                 document.getElementById('modalSiswa').classList.remove('hidden');
@@ -611,13 +639,13 @@
             });
         }
 
-        function bersihkanNilaiExcel(val) {
-            if (val === undefined || val === null || val === "") return 0;
-            let str = String(val).trim().replace(',', '.');
-            return isNaN(parseFloat(str)) ? 0 : str;
+        // Mengambil teks asli dari Excel tanpa merusak format tulisan berkoma
+        function ambilNilaiAsliExcel(val) {
+            if (val === undefined || val === null || val === "") return "0";
+            return String(val).trim();
         }
 
-        // INPUT EXCEL PARSER SYSTEM (Kini Bebas Kolom Link Foto)
+        // INPUT EXCEL PARSER SYSTEM
         document.getElementById('uploadExcel').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -627,7 +655,8 @@
                 const workbook = XLSX.read(data, { type: 'binary' });
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(sheet);
+                // raw: true memastikan format string teks angka berkoma terbaca utuh asli
+                const rows = XLSX.utils.sheet_to_json(sheet, { raw: false });
 
                 if(rows.length === 0) return showNotification("Berkas Excel kosong!", "error");
 
@@ -643,15 +672,15 @@
                         status: String(row["Status"]).toUpperCase().trim() === "LULUS" ? "LULUS" : "TIDAK LULUS",
                         linkSKL: row["Link SKL"] || "",
                         nilai: {
-                            agama: bersihkanNilaiExcel(row["P. Agama"]),
-                            ppkn: bersihkanNilaiExcel(row["PPKn"]),
-                            indonesia: bersihkanNilaiExcel(row["B. Indonesia"] || row["B. Indo"]),
-                            matematika: bersihkanNilaiExcel(row["Matematika"] || row["MTK"]),
-                            ipa: bersihkanNilaiExcel(row["IPA"]),
-                            ips: bersihkanNilaiExcel(row["IPS"]),
-                            sbdp: bersihkanNilaiExcel(row["SBdP"] || row["Seni Budaya"]),
-                            pjok: bersihkanNilaiExcel(row["PJOK"]),
-                            inggris: bersihkanNilaiExcel(row["B. Inggris"])
+                            agama: ambilNilaiAsliExcel(row["P. Agama"]),
+                            ppkn: ambilNilaiAsliExcel(row["PPKn"]),
+                            indonesia: ambilNilaiAsliExcel(row["B. Indonesia"] || row["B. Indo"]),
+                            matematika: ambilNilaiAsliExcel(row["Matematika"] || row["MTK"]),
+                            ipa: ambilNilaiAsliExcel(row["IPA"]),
+                            ips: ambilNilaiAsliExcel(row["IPS"]),
+                            sbdp: ambilNilaiAsliExcel(row["SBdP"] || row["Seni Budaya"]),
+                            pjok: ambilNilaiAsliExcel(row["PJOK"]),
+                            inggris: ambilNilaiAsliExcel(row["B. Inggris"])
                         }
                     };
                     if(payload.nis) {
@@ -665,11 +694,11 @@
             reader.readAsBinaryString(file);
         });
 
-        // DOWNLOAD EXCEL TEMPLATE ENGINE (Terbaru & Ringkas)
+        // DOWNLOAD EXCEL TEMPLATE ENGINE
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
             const template = [{
                 "Nama Lengkap Siswa": "Ahmad Dani", "NIS": "202601", "NISN": "00987123", "Password Siswa": "sandi123", "Tempat Tanggal Lahir": "Tangerang, 10 Mei 2014", "Pilih Kelas": "Kelas 6A", "Status": "LULUS", "Link SKL": "https://link-gdrive-skl.com",
-                "P. Agama": "89,83", "PPKn": 88, "B. Indonesia": 90, "Matematika": 82, "IPA": 85, "IPS": 80, "SBdP": 87, "PJOK": 90, "B. Inggris": 84
+                "P. Agama": "95,70", "PPKn": "88,00", "B. Indonesia": "90,15", "Matematika": "82,50", "IPA": "85,00", "IPS": "80,00", "SBdP": "87,45", "PJOK": "90,00", "B. Inggris": "84,30"
             }];
             const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
@@ -687,7 +716,7 @@
                     const s = dataSiswa[key];
                     outputArray.push({
                         "Nama Siswa": s.nama, "NIS": s.nis, "NISN": s.nisn, "Password Siswa": s.password, "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL,
-                        "P. Agama": String(s.nilai?.agama || 0).replace('.', ','), "PPKn": String(s.nilai?.ppkn || 0).replace('.', ','), "B. Indonesia": String(s.nilai?.indonesia || 0).replace('.', ','), "Matematika": String(s.nilai?.matematika || 0).replace('.', ','), "IPA": String(s.nilai?.ipa || 0).replace('.', ','), "IPS": String(s.nilai?.ips || 0).replace('.', ','), "SBdP": String(s.nilai?.sbdp || 0).replace('.', ','), "PJOK": String(s.nilai?.pjok || 0).replace('.', ','), "B. Inggris": String(s.nilai?.inggris || 0).replace('.', ',')
+                        "P. Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris || 0)
                     });
                 });
                 const ws = XLSX.utils.json_to_sheet(outputArray);
