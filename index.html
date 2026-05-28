@@ -320,7 +320,7 @@
                             <input type="text" id="n_ips" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
                         </div>
                         <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                            <label class="text-[11px] text-slate-600 font-medium">Seni Budaya dan Prakarya</label>
+                            <label class="text-[11px] text-slate-600 font-medium">Seni dan Budaya</label>
                             <input type="text" id="n_sbdp" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
                         </div>
                         <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
@@ -532,7 +532,7 @@
                                     <span class="font-semibold text-white text-right font-mono">${s.nisn || '-'}</span>
                                 </div>
                                 <div class="flex justify-between py-2.5">
-                                    <span class="text-blue-200/70 font-medium">Kelas / Rombel</span>
+                                    <span class="text-blue-200/70 font-medium">Kelas</span>
                                     <span class="font-semibold text-white text-right">${s.kelas || '-'}</span>
                                 </div>
                             </div>
@@ -596,7 +596,7 @@
                                 <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.ips)}</div>
                             </div>
                             <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
-                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Seni Budaya dan Prakarya</div>
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Seni dan Budaya</div>
                                 <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.sbdp)}</div>
                             </div>
                             <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
@@ -783,7 +783,7 @@
                                     matematika: formatNilaiTampil(row["Matematika"]),
                                     ipa: formatNilaiTampil(row["Ilmu Pengetahuan Alam"]),
                                     ips: formatNilaiTampil(row["Ilmu Pengetahuan Sosial"]),
-                                    sbdp: formatNilaiTampil(row["Seni Budaya dan Prakarya"]),
+                                    sbdp: formatNilaiTampil(row["Seni dan Budaya"]),
                                     pjok: formatNilaiTampil(row["Pendidikan Jasmani, Olahraga, dan Kesehatan"]),
                                     inggris: formatNilaiTampil(row["Bahasa Inggris"])
                                 }
@@ -822,7 +822,7 @@
                 "Matematika": 95, 
                 "Ilmu Pengetahuan Alam": 92, 
                 "Ilmu Pengetahuan Sosial": 86, 
-                "Seni Budaya dan Prakarya": 89, 
+                "Seni dan Budaya": 89, 
                 "Pendidikan Jasmani, Olahraga, dan Kesehatan": 90, 
                 "Bahasa Inggris": 91
             }];
@@ -855,7 +855,7 @@
                         "Matematika": formatNilaiTampil(s.nilai?.matematika), 
                         "Ilmu Pengetahuan Alam": formatNilaiTampil(s.nilai?.ipa), 
                         "Ilmu Pengetahuan Sosial": formatNilaiTampil(s.nilai?.ips), 
-                        "Seni Budaya dan Prakarya": formatNilaiTampil(s.nilai?.sbdp), 
+                        "Seni dan Budaya": formatNilaiTampil(s.nilai?.sbdp), 
                         "Pendidikan Jasmani, Olahraga, dan Kesehatan": formatNilaiTampil(s.nilai?.pjok), 
                         "Bahasa Inggris": formatNilaiTampil(s.nilai?.inggris)
                     });
