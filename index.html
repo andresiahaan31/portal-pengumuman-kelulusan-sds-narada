@@ -58,7 +58,7 @@
 
         .card-main { 
             /* Transparansi 10% (0.1) dengan corak Navy agar background tembus */
-            background-color: rgba(10, 20, 60, 0.1); 
+            background-color: rgba(10, 20, 60, 0.1);
             color: #f8fafc; 
             border: 1px solid rgba(255, 255, 255, 0.15); 
             backdrop-filter: blur(10px); 
@@ -66,7 +66,7 @@
         }
         .input-field { 
             /* Warna Navy transparan untuk kolom input */
-            background-color: rgba(15, 25, 60, 0.25); 
+            background-color: rgba(15, 25, 60, 0.25);
             color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.15); 
         }
@@ -271,6 +271,15 @@
                     <div><label class="block font-semibold text-slate-500 mb-1">NISN</label><input type="text" id="m_nisn" class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200"></div>
                     <div><label class="block font-semibold text-slate-500 mb-1">Password Login</label><input type="text" id="m_pass" required class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200"></div>
                     <div><label class="block font-semibold text-slate-500 mb-1">Tempat, Tanggal Lahir</label><input type="text" id="m_ttl" required class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200"></div>
+                    
+                    <div>
+                        <label class="block font-semibold text-slate-500 mb-1">Jenis Kelamin</label>
+                        <select id="m_jk" class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200">
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+
                     <div><label class="block font-semibold text-slate-500 mb-1">Kelas / Rombel</label><input type="text" id="m_kelas" class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200" placeholder="Contoh: Kelas 6A"></div>
                     <div class="sm:col-span-2"><label class="block font-semibold text-slate-500 mb-1">Status Keputusan</label><select id="m_status" class="w-full border border-blue-200 rounded-lg px-3 py-2 bg-blue-50 font-bold text-blue-600"><option value="LULUS">LULUS</option><option value="TIDAK LULUS">TIDAK LULUS</option></select></div>
                     <div class="sm:col-span-2"><label class="block font-semibold text-slate-500 mb-1">URL File SKL Google Drive (.pdf)</label><input type="url" id="m_skl" class="w-full bg-slate-50 border rounded-lg px-3 py-2 border-slate-200"></div>
@@ -305,12 +314,12 @@
         // ==========================================
         // Ubah true  = Tombol Download SKL akan Muncul (jika siswa lulus & punya link SKL)
         // Ubah false = Tombol Download SKL akan Disembunyikan sepenuhnya (Mode Disable)
-        const AKTIFKAN_DOWNLOAD_SKL = false; 
-
+        const AKTIFKAN_DOWNLOAD_SKL = false;
+        
         let targetCountdownDate = new Date("Jun 15, 2026 10:00:00").getTime();
         let globalAdminPass = "Narada12345_";
         let countdownInterval = null;
-        
+
         db.ref('config/website').on('value', (snapshot) => {
             const cfg = snapshot.val() || {};
             if (cfg.targetWaktuString) {
@@ -399,8 +408,7 @@
             document.getElementById('inputPassAdmin').value = "";
             document.getElementById('modalLoginAdmin').classList.remove('hidden');
         }
-        function closeModalLoginAdmin() { document.getElementById('modalLoginAdmin').classList.add('hidden');
-        }
+        function closeModalLoginAdmin() { document.getElementById('modalLoginAdmin').classList.add('hidden'); }
         
         function handleAdminLogin(e) {
             e.preventDefault();
@@ -417,15 +425,19 @@
             e.preventDefault();
             const nis = document.getElementById('loginNis').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
+            
             db.ref('siswa').orderByChild('nis').equalTo(nis).once('value').then((snapshot) => {
                 if(!snapshot.exists()) return showNotification("Siswa tidak ditemukan!", "error");
+                
                 let siswaData = null;
                 snapshot.forEach((child) => {
                     if(String(child.val().password) === password) {
                         siswaData = child.val();
                     }
                 });
+                
                 if(!siswaData) return showNotification("NIS atau Password salah!", "error");
+                
                 showNotification(`Selamat Datang, ${siswaData.nama}`);
                 renderHasilSiswaCard(siswaData);
                 switchView('result');
@@ -443,94 +455,87 @@
             return String(val).trim();
         }
 
+        // =====================================
+        // DISINI PERUBAHAN TAMPILAN JENIS KELAMIN
+        // =====================================
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
-            const isLulus = s.status === "LULUS";
-            let pathFotoBase = `assets/foto_siswa/${s.nis}`;
+            const isLulus = s.status && s.status.toUpperCase() === "LULUS";
             
-            resCard.className = `animate__animated animate__fadeInUp card-main rounded-2xl p-6 md:p-8 ${isLulus ? 'glow-success' : 'glow-fail'}`;
+            const btnSKLHtml = (isLulus && AKTIFKAN_DOWNLOAD_SKL && s.linkSKL && s.linkSKL.trim() !== "") 
+                ? `<a href="${s.linkSKL}" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all text-sm mt-6 cursor-pointer">Unduh Surat Keterangan Lulus (SKL)</a>`
+                : "";
 
-            // PENGATURAN KOTAK TRANSPARAN (bg-white/10 berarti kotak putih transparan 10%)
-            let htmlContent = `
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                    
-                    <div class="md:col-span-4 flex flex-col items-center text-center bg-white/10 p-5 rounded-xl border border-white/10 shadow-inner">
-                        <div class="mb-4 flex items-center justify-center">
-                            <img src="${pathFotoBase}.png" class="foto-3x4 shadow-lg bg-blue-900/30" onerror="this.onerror=null; this.src='${pathFotoBase}.jpg'; this.onerror=function(){this.src='${pathFotoBase}.JPG'; this.onerror=function(){this.src='${pathFotoBase}.PNG'; this.onerror=function(){this.src='https://placehold.co/300x400/1e293b/ffffff?text=FOTO+3X4'}}}}">
-                        </div>
-                        <h3 class="text-sm font-bold text-white tracking-wide uppercase line-clamp-2">${s.nama}</h3>
-                        <div class="w-full border-t border-white/10 my-3"></div>
-                        <div class="text-left w-full space-y-2 text-[11px] text-blue-100">
-                            <div><span class="text-blue-300 font-medium block">Tempat, Tanggal Lahir:</span><span class="font-semibold text-white">${s.ttl || '-'}</span></div>
-                            <div><span class="text-blue-300 font-medium block">Nomor Induk Siswa:</span><span class="font-semibold text-white">${s.nis}</span></div>
-                            <div><span class="text-blue-300 font-medium block">NISN:</span><span class="font-semibold text-white">${s.nisn || '-'}</span></div>
-                            <div><span class="text-blue-300 font-medium block">Kelas:</span><span class="font-semibold text-white">${s.kelas || '-'}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="md:col-span-8 space-y-4">
-                        
-                        <div class="bg-white/10 rounded-xl p-4 border border-white/10 shadow-inner">
-                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-blue-200 mb-3 flex items-center gap-1.5">📊 Transkrip Nilai</h4>
-                            <div class="grid grid-cols-3 sm:grid-cols-3 gap-2 text-center">
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">Agama</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">PPKn</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">B. Indonesia</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">Matematika</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">IPA</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">IPS</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">SBdP</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">PJOK</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div></div>
-                                <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">B. Inggris</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div></div>
+            resCard.innerHTML = `
+                <div class="card-main rounded-2xl p-6 md:p-8 animate__animated animate__zoomIn border ${isLulus ? 'glow-success' : 'glow-fail'}">
+                    <div class="flex flex-col md:flex-row gap-6 items-center md:items-start border-b border-white/10 pb-6 mb-6">
+                        <img src="assets/pasfoto.jpg" alt="Foto Siswa" class="foto-3x4 bg-slate-800" onerror="this.src='https://placehold.co/120x160/1e293b/ffffff?text=FOTO'">
+                        <div class="flex-1 text-center md:text-left">
+                            <h2 class="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">${s.nama}</h2>
+                            <div class="text-left w-full space-y-2 text-[11px] text-blue-100">
+                                <div><span class="text-blue-300 font-medium block">Tempat, Tanggal Lahir:</span><span class="font-semibold text-white">${s.ttl || '-'}</span></div>
+                                <div><span class="text-blue-300 font-medium block">Jenis Kelamin:</span><span class="font-semibold text-white">${s.jk || '-'}</span></div>
+                                <div><span class="text-blue-300 font-medium block">Nomor Induk Siswa:</span><span class="font-semibold text-white">${s.nis}</span></div>
+                                <div><span class="text-blue-300 font-medium block">NISN:</span><span class="font-semibold text-white">${s.nisn || '-'}</span></div>
+                                <div><span class="text-blue-300 font-medium block">Kelas:</span><span class="font-semibold text-white">${s.kelas || '-'}</span></div>
                             </div>
                         </div>
-
-                        <div class="text-center p-3.5 rounded-xl border ${isLulus ? 'bg-emerald-900/20 border-emerald-500/20' : 'bg-rose-900/20 border-rose-500/20'}">
-                            <span class="text-[9px] font-semibold uppercase tracking-widest text-blue-200 block mb-0.5">Dinyatakan</span>
-                            <div class="text-xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'} uppercase mb-0.5">${s.status}</div>
-                            <span class="text-[10px] font-medium text-blue-100 bg-white/10 px-2 py-0.5 rounded-full border border-white/10 inline-block mb-2">Tahun Ajaran 2025/2026</span>
-                            <p class="text-[11px] text-blue-100 max-w-md mx-auto leading-relaxed">
-                                ${isLulus ? "Selamat atas pencapaian berharga ini! Teruslah belajar, berproses, berkembang, dan ukir prestasi gemilang di jenjang pendidikan berikutnya." : "Jangan berkecil hati, tetap semangat berjuang. Kegagalan hari ini adalah awal dari kesuksesan yang tertunda di masa depan."}
-                            </p>
-                            ${(AKTIFKAN_DOWNLOAD_SKL && isLulus && s.linkSKL) ?
-                            `
-                                <div class="mt-3">
-                                    <a href="${s.linkSKL}" target="_blank" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-4 py-2 rounded-xl shadow-md transition cursor-pointer">
-                                        📥 Unduh SKL Resmi (PDF)
-                                    </a>
-                                </div>` : ''}
-                        </div>
-
                     </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-xs font-bold text-blue-200 uppercase tracking-widest mb-3 border-l-2 border-blue-500 pl-2">Capaian Nilai Ujian</h3>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">Agama</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">PPKn</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">B. Indo</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">MTK</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">IPA</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">IPS</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">SBdP</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">PJOK</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10"><div class="text-[10px] text-blue-200 font-medium">B. Inggris</div><div class="text-sm font-extrabold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-3.5 rounded-xl border ${isLulus ? 'bg-emerald-900/20 border-emerald-500/20' : 'bg-rose-900/20 border-rose-500/20'}">
+                        <span class="text-[9px] font-semibold uppercase tracking-widest text-blue-200 block mb-0.5">Dinyatakan</span>
+                        <div class="text-xl font-black tracking-wider ${isLulus ? 'text-emerald-400' : 'text-rose-400'}">${s.status.toUpperCase()}</div>
+                    </div>
+
+                    ${btnSKLHtml}
                 </div>
             `;
-            resCard.innerHTML = htmlContent;
         }
 
         function loadDaftarSiswaAdmin() {
-            const tbody = document.getElementById('tabelSiswaAdmin');
-            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Memuat data...</td></tr>`;
             db.ref('siswa').once('value').then((snapshot) => {
-                tbody.innerHTML = "";
-                if (!snapshot.exists()) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data siswa.</td></tr>`;
+                const tbody = document.getElementById('tabelSiswaAdmin');
+                tbody.innerHTML = '';
+                if(!snapshot.exists()) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-xs text-slate-400">Tidak ada data siswa.</td></tr>`;
                     return;
                 }
+                
                 snapshot.forEach((child) => {
-                    const s = child.val();
                     const key = child.key;
-                    tbody.innerHTML += `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/80 transition-all">
-                            <td class="p-4 font-semibold">${s.nis}</td>
-                            <td class="p-4 font-medium text-slate-900">${s.nama}</td>
-                            <td class="p-4">${s.kelas || '-'}</td>
-                            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${s.status === 'LULUS' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}">${s.status}</span></td>
-                            <td class="p-4 text-center space-x-1.5">
-                                <button onclick="editSiswa('${key}')" class="text-blue-600 bg-blue-50 px-2.5 py-1 rounded hover:bg-blue-100 font-semibold cursor-pointer">Edit</button>
-                                <button onclick="hapusSiswa('${key}')" class="text-rose-600 bg-rose-50 px-2.5 py-1 rounded hover:bg-rose-100 font-semibold cursor-pointer">Hapus</button>
-                            </td>
-                        </tr>
+                    const s = child.val();
+                    const stColor = s.status === "LULUS" ? "text-emerald-600 bg-emerald-50" : "text-rose-600 bg-rose-50";
+                    
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50 transition";
+                    tr.innerHTML = `
+                        <td class="p-4 font-semibold text-slate-700">${s.nis}</td>
+                        <td class="p-4">${s.nama}</td>
+                        <td class="p-4">${s.kelas || '-'}</td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-[10px] font-bold ${stColor}">${s.status}</span></td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center gap-2">
+                                <button onclick="editSiswa('${key}')" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200 cursor-pointer font-semibold">Edit</button>
+                                <button onclick="hapusSiswa('${key}')" class="text-[10px] bg-rose-100 text-rose-600 px-2 py-1 rounded hover:bg-rose-200 cursor-pointer font-semibold">Hapus</button>
+                            </div>
+                        </td>
                     `;
+                    tbody.appendChild(tr);
                 });
             });
         }
@@ -538,12 +543,15 @@
         function openModalTambah() {
             document.getElementById('formSiswaManual').reset();
             document.getElementById('m_key_id').value = "";
-            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Data Siswa Manual";
+            document.getElementById('modalSiswaTitle').innerText = "📝 Tambah Data Siswa";
             document.getElementById('modalSiswa').classList.remove('hidden');
         }
-        function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden');
-        }
 
+        function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden'); }
+
+        // =====================================
+        // DISINI TAMBAHAN PENYIMPANAN JENIS KELAMIN
+        // =====================================
         function simpanSiswaManual(e) {
             e.preventDefault();
             const key = document.getElementById('m_key_id').value;
@@ -553,6 +561,7 @@
                 nisn: document.getElementById('m_nisn').value.trim(),
                 password: document.getElementById('m_pass').value.trim(),
                 ttl: document.getElementById('m_ttl').value.trim(),
+                jk: document.getElementById('m_jk').value,           // <--- DI SINI
                 kelas: document.getElementById('m_kelas').value.trim(),
                 status: document.getElementById('m_status').value,
                 linkSKL: document.getElementById('m_skl').value.trim(),
@@ -568,6 +577,7 @@
                     inggris: document.getElementById('n_ing').value.trim() || "0"
                 }
             };
+            
             const refTarget = key ? db.ref(`siswa/${key}`) : db.ref('siswa').push();
             refTarget.set(payload).then(() => {
                 closeModalSiswa();
@@ -576,89 +586,96 @@
             });
         }
 
+        // =====================================
+        // DISINI EDIT UNTUK MENGISI JENIS KELAMIN
+        // =====================================
         function editSiswa(key) {
             db.ref(`siswa/${key}`).once('value').then((snapshot) => {
                 if(!snapshot.exists()) return;
                 const s = snapshot.val();
+                
                 document.getElementById('m_key_id').value = key;
                 document.getElementById('m_nama').value = s.nama;
                 document.getElementById('m_nis').value = s.nis;
                 document.getElementById('m_nisn').value = s.nisn || "";
                 document.getElementById('m_pass').value = s.password;
-                document.getElementById('m_ttl').value = s.ttl;
+                document.getElementById('m_ttl').value = s.ttl || "";
+                document.getElementById('m_jk').value = s.jk || "Laki-laki"; // <--- DI SINI
                 document.getElementById('m_kelas').value = s.kelas || "";
-                document.getElementById('m_status').value = s.status;
+                document.getElementById('m_status').value = s.status || "LULUS";
                 document.getElementById('m_skl').value = s.linkSKL || "";
                 
-                document.getElementById('n_agama').value = s.nilai?.agama || "0";
-                document.getElementById('n_ppkn').value = s.nilai?.ppkn || "0";
-                document.getElementById('n_indo').value = s.nilai?.indonesia || "0";
-                document.getElementById('n_matematika').value = s.nilai?.matematika || "0";
-                document.getElementById('n_ipa').value = s.nilai?.ipa || "0";
-                document.getElementById('n_ips').value = s.nilai?.ips || "0";
-                document.getElementById('n_sbdp').value = s.nilai?.sbdp || "0";
-                document.getElementById('n_pjok').value = s.nilai?.pjok || "0";
-                document.getElementById('n_ing').value = s.nilai?.inggris || "0";
-                document.getElementById('modalSiswaTitle').innerText = "📝 Edit Data";
+                if(s.nilai) {
+                    document.getElementById('n_agama').value = formatNilaiTampil(s.nilai.agama);
+                    document.getElementById('n_ppkn').value = formatNilaiTampil(s.nilai.ppkn);
+                    document.getElementById('n_indo').value = formatNilaiTampil(s.nilai.indonesia);
+                    document.getElementById('n_mtk').value = formatNilaiTampil(s.nilai.matematika);
+                    document.getElementById('n_ipa').value = formatNilaiTampil(s.nilai.ipa);
+                    document.getElementById('n_ips').value = formatNilaiTampil(s.nilai.ips);
+                    document.getElementById('n_sbdp').value = formatNilaiTampil(s.nilai.sbdp);
+                    document.getElementById('n_pjok').value = formatNilaiTampil(s.nilai.pjok);
+                    document.getElementById('n_ing').value = formatNilaiTampil(s.nilai.inggris);
+                } else {
+                    document.querySelectorAll('input[id^="n_"]').forEach(el => el.value = "0");
+                }
+                
+                document.getElementById('modalSiswaTitle').innerText = "📝 Edit Data Siswa";
                 document.getElementById('modalSiswa').classList.remove('hidden');
             });
         }
 
         function hapusSiswa(key) {
-            if(confirm("Anda yakin?")) {
+            if(confirm("Yakin ingin menghapus siswa ini?")) {
                 db.ref(`siswa/${key}`).remove().then(() => {
                     loadDaftarSiswaAdmin();
-                    showNotification("Data berhasil dihapus.", "error");
+                    showNotification("Berhasil dihapus!");
                 });
             }
         }
 
         function saveCountdownTimer() {
-            const valWaktu = document.getElementById('cfgTargetWaktu').value;
-            if(!valWaktu) return alert("Silakan tentukan tanggal dan jam terlebih dahulu!");
-            db.ref('config/website').set({ targetWaktuString: valWaktu }).then(() => {
-                showNotification("Berhasil diperbarui!");
+            const val = document.getElementById('cfgTargetWaktu').value;
+            if(!val) return showNotification("Pilih waktu terlebih dahulu!", "error");
+            
+            db.ref('config/website').update({ targetWaktuString: val }).then(() => {
+                showNotification("Jadwal Countdown Berhasil Disimpan!");
             });
         }
 
+        // =====================================
+        // DISINI TAMBAHAN IMPOR EXCEL
+        // =====================================
         document.getElementById('uploadExcel').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (!file) return;
+            if(!file) return;
             const reader = new FileReader();
-            reader.onload = function(evt) {
+            reader.onload = function(e) {
                 try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetName = workbook.SheetNames[0];
-                    const sheet = workbook.Sheets[sheetName];
-                    const json = XLSX.utils.sheet_to_json(sheet);
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {defval: ""});
                     
-                    if(json.length === 0) return alert("File Excel kosong atau format tidak sesuai!");
+                    if(jsonData.length === 0) return showNotification("File Excel kosong!", "error");
                     
                     let importedCount = 0;
-                    db.ref('siswa').once('value').then((snapshot) => {
-                        const existingSiswa = {};
-                        if(snapshot.exists()) {
-                            snapshot.forEach((child) => {
-                                existingSiswa[String(child.val().nis).trim()] = child.key;
-                            });
-                        }
-
-                        json.forEach(row => {
-                            const nisKey = String(row["NIS"] || "").trim();
-                            if(!nisKey) return;
-
-                            const payload = {
+                    const updates = {};
+                    
+                    jsonData.forEach((row, index) => {
+                        if(row["NIS"] && row["Nama Siswa"]) {
+                            const newRef = db.ref('siswa').push();
+                            const sData = {
                                 nama: String(row["Nama Siswa"] || "").trim(),
-                                nis: nisKey,
+                                nis: String(row["NIS"] || "").trim(),
                                 nisn: String(row["NISN"] || "").trim(),
-                                password: String(row["Password Siswa"] || row["Password"] || "123456").trim(),
-                                ttl: String(row["Tempat Tanggal Lahir"] || "-").trim(),
-                                kelas: String(row["Pilih Kelas"] || row["Kelas"] || "-").trim(),
+                                password: String(row["Password Siswa"] || "").trim(),
+                                ttl: String(row["Tempat Tanggal Lahir"] || "").trim(),
+                                jk: String(row["Jenis Kelamin"] || "Laki-laki").trim(), // <--- DI SINI
+                                kelas: String(row["Pilih Kelas"] || "").trim(),
                                 status: String(row["Status"] || "LULUS").toUpperCase().trim(),
                                 linkSKL: String(row["Link SKL"] || "").trim(),
                                 nilai: {
-                                    agama: formatNilaiTampil(row["Agama"] || row["P. Agama"]),
+                                    agama: formatNilaiTampil(row["Agama"]),
                                     ppkn: formatNilaiTampil(row["PPKn"]),
                                     indonesia: formatNilaiTampil(row["B. Indonesia"]),
                                     matematika: formatNilaiTampil(row["Matematika"]),
@@ -669,14 +686,12 @@
                                     inggris: formatNilaiTampil(row["B. Inggris"])
                                 }
                             };
-                            if(existingSiswa[nisKey]) {
-                                db.ref(`siswa/${existingSiswa[nisKey]}`).set(payload);
-                            } else {
-                                db.ref('siswa').push(payload);
-                            }
+                            updates[newRef.key] = sData;
                             importedCount++;
-                        });
-
+                        }
+                    });
+                    
+                    db.ref('siswa').update(updates).then(() => {
                         document.getElementById('uploadExcel').value = "";
                         loadDaftarSiswaAdmin();
                         showNotification(`Berhasil memproses ${importedCount} data siswa!`);
@@ -687,18 +702,32 @@
             };
             reader.readAsArrayBuffer(file);
         });
-        
+
+        // =====================================
+        // DISINI TAMBAHAN FORMAT TEMPLATE EXCEL
+        // =====================================
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
             const template = [{
-                "Nama Siswa": "Zack Ahmad", "NIS": "2026001", "NISN": "0123456789", "Password Siswa": "Sandi123", "Tempat Tanggal Lahir": "Jakarta, 10 Januari 2014", "Pilih Kelas": "Kelas 6A", "Status": "LULUS", "Link SKL": "https://drive.google.com/file/d/xxxx/view",
-                "Agama": 85, "PPKn": 88, "B. Indonesia": 90, "Matematika": 82, "IPA": 85, "IPS": 87, "SBdP": 90, "PJOK": 86, "B. Inggris": 80
+                "Nama Siswa": "Zack Ahmad", 
+                "NIS": "2026001", 
+                "NISN": "0123456789", 
+                "Password Siswa": "Sandi123", 
+                "Tempat Tanggal Lahir": "Jakarta, 10 Januari 2014", 
+                "Jenis Kelamin": "Laki-laki", // <--- DI SINI
+                "Pilih Kelas": "Kelas 6A", 
+                "Status": "LULUS", 
+                "Link SKL": "https://drive.google.com/file/d/xxxx/view", 
+                "Agama": 90, "PPKn": 85, "B. Indonesia": 88, "Matematika": 95, "IPA": 92, "IPS": 86, "SBdP": 89, "PJOK": 90, "B. Inggris": 91
             }];
             const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Template");
-            XLSX.writeFile(wb, "Template_Database_Siswa.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, "Template Siswa");
+            XLSX.writeFile(wb, "Template_Impor_Siswa.xlsx");
         });
-        
+
+        // =====================================
+        // DISINI TAMBAHAN EKSPOR EXCEL
+        // =====================================
         document.getElementById('btnExport').addEventListener('click', function() {
             db.ref('siswa').once('value').then((snapshot) => {
                 const dataSiswa = snapshot.val();
@@ -707,19 +736,32 @@
                 Object.keys(dataSiswa).forEach(k => {
                     const s = dataSiswa[k];
                     out.push({
-                        "Nama Siswa": s.nama, "NIS": s.nis, "NISN": s.nisn, "Password Siswa": s.password, "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL, 
-                        "Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
+                        "Nama Siswa": s.nama, 
+                        "NIS": s.nis, 
+                        "NISN": s.nisn, 
+                        "Password Siswa": s.password, 
+                        "Tempat Tanggal Lahir": s.ttl, 
+                        "Jenis Kelamin": s.jk || "-", // <--- DI SINI
+                        "Pilih Kelas": s.kelas, 
+                        "Status": s.status, 
+                        "Link SKL": s.linkSKL, 
+                        "Agama": formatNilaiTampil(s.nilai?.agama), 
+                        "PPKn": formatNilaiTampil(s.nilai?.ppkn), 
+                        "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), 
+                        "Matematika": formatNilaiTampil(s.nilai?.matematika), 
+                        "IPA": formatNilaiTampil(s.nilai?.ipa), 
+                        "IPS": formatNilaiTampil(s.nilai?.ips), 
+                        "SBdP": formatNilaiTampil(s.nilai?.sbdp), 
+                        "PJOK": formatNilaiTampil(s.nilai?.pjok), 
+                        "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
                     });
                 });
                 const ws = XLSX.utils.json_to_sheet(out);
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Database Siswa");
-                XLSX.writeFile(wb, "Database_Siswa_Export.xlsx");
-                showNotification("Database berhasil diekspor ke Excel!");
+                XLSX.utils.book_append_sheet(wb, ws, "Data Kelulusan");
+                XLSX.writeFile(wb, "Data_Siswa_Kelulusan.xlsx");
             });
         });
-
-        setTimeout(() => { switchView('countdown'); }, 200);
     </script>
 </body>
 </html>
