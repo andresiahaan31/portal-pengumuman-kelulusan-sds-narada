@@ -190,7 +190,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5 border-b border-slate-100 pb-4">
                 <div>
                     <h2 class="text-base font-bold text-slate-950 flex items-center gap-2">🛠️ Dashboard Admin</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Kelola data nilai ujian, status kelulusan, dan countdown.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Kelola data nilai ujian, status kelulusan, and countdown.</p>
                 </div>
                 <button onclick="switchView('countdown')" class="text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl transition text-sm font-bold cursor-pointer" title="Tutup">❌</button>
             </div>
@@ -312,8 +312,6 @@
         // ==========================================
         // SAKLAR ADMIN: ON/OFF TOMBOL DOWNLOAD SKL
         // ==========================================
-        // Ubah true  = Tombol Download SKL akan Muncul (jika siswa lulus & punya link SKL)
-        // Ubah false = Tombol Download SKL akan Disembunyikan sepenuhnya (Mode Disable)
         const AKTIFKAN_DOWNLOAD_SKL = false;
         
         let targetCountdownDate = new Date("Jun 15, 2026 10:00:00").getTime();
@@ -455,9 +453,9 @@
             return String(val).trim();
         }
 
-        // =====================================
-        // DISINI PERUBAHAN TAMPILAN JENIS KELAMIN
-        // =====================================
+        // ===============================================
+        // PERBAIKAN: FOTO SISWA DIPANGGIL BERDASARKAN NIS
+        // ===============================================
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
             const isLulus = s.status && s.status.toUpperCase() === "LULUS";
@@ -469,7 +467,9 @@
             resCard.innerHTML = `
                 <div class="card-main rounded-2xl p-6 md:p-8 animate__animated animate__zoomIn border ${isLulus ? 'glow-success' : 'glow-fail'}">
                     <div class="flex flex-col md:flex-row gap-6 items-center md:items-start border-b border-white/10 pb-6 mb-6">
-                        <img src="assets/pasfoto.jpg" alt="Foto Siswa" class="foto-3x4 bg-slate-800" onerror="this.src='https://placehold.co/120x160/1e293b/ffffff?text=FOTO'">
+                        
+                        <img src="assets/${s.nis}.jpg" alt="Foto Siswa" class="foto-3x4 bg-slate-800" onerror="this.onerror=null; this.src='assets/${s.nis}.png'; this.onerror=function(){this.src='assets/${s.nis}.JPG'; this.onerror=function(){this.src='assets/${s.nis}.PNG'; this.onerror=function(){this.src='https://placehold.co/120x160/1e293b/ffffff?text=${s.nis}'}}}}">
+                        
                         <div class="flex-1 text-center md:text-left">
                             <h2 class="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">${s.nama}</h2>
                             <div class="text-left w-full space-y-2 text-[11px] text-blue-100">
@@ -549,9 +549,6 @@
 
         function closeModalSiswa() { document.getElementById('modalSiswa').classList.add('hidden'); }
 
-        // =====================================
-        // DISINI TAMBAHAN PENYIMPANAN JENIS KELAMIN
-        // =====================================
         function simpanSiswaManual(e) {
             e.preventDefault();
             const key = document.getElementById('m_key_id').value;
@@ -561,7 +558,7 @@
                 nisn: document.getElementById('m_nisn').value.trim(),
                 password: document.getElementById('m_pass').value.trim(),
                 ttl: document.getElementById('m_ttl').value.trim(),
-                jk: document.getElementById('m_jk').value,           // <--- DI SINI
+                jk: document.getElementById('m_jk').value,
                 kelas: document.getElementById('m_kelas').value.trim(),
                 status: document.getElementById('m_status').value,
                 linkSKL: document.getElementById('m_skl').value.trim(),
@@ -586,9 +583,6 @@
             });
         }
 
-        // =====================================
-        // DISINI EDIT UNTUK MENGISI JENIS KELAMIN
-        // =====================================
         function editSiswa(key) {
             db.ref(`siswa/${key}`).once('value').then((snapshot) => {
                 if(!snapshot.exists()) return;
@@ -600,7 +594,7 @@
                 document.getElementById('m_nisn').value = s.nisn || "";
                 document.getElementById('m_pass').value = s.password;
                 document.getElementById('m_ttl').value = s.ttl || "";
-                document.getElementById('m_jk').value = s.jk || "Laki-laki"; // <--- DI SINI
+                document.getElementById('m_jk').value = s.jk || "Laki-laki";
                 document.getElementById('m_kelas').value = s.kelas || "";
                 document.getElementById('m_status').value = s.status || "LULUS";
                 document.getElementById('m_skl').value = s.linkSKL || "";
@@ -642,9 +636,6 @@
             });
         }
 
-        // =====================================
-        // DISINI TAMBAHAN IMPOR EXCEL
-        // =====================================
         document.getElementById('uploadExcel').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(!file) return;
@@ -670,7 +661,7 @@
                                 nisn: String(row["NISN"] || "").trim(),
                                 password: String(row["Password Siswa"] || "").trim(),
                                 ttl: String(row["Tempat Tanggal Lahir"] || "").trim(),
-                                jk: String(row["Jenis Kelamin"] || "Laki-laki").trim(), // <--- DI SINI
+                                jk: String(row["Jenis Kelamin"] || "Laki-laki").trim(),
                                 kelas: String(row["Pilih Kelas"] || "").trim(),
                                 status: String(row["Status"] || "LULUS").toUpperCase().trim(),
                                 linkSKL: String(row["Link SKL"] || "").trim(),
@@ -703,9 +694,6 @@
             reader.readAsArrayBuffer(file);
         });
 
-        // =====================================
-        // DISINI TAMBAHAN FORMAT TEMPLATE EXCEL
-        // =====================================
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
             const template = [{
                 "Nama Siswa": "Zack Ahmad", 
@@ -713,7 +701,7 @@
                 "NISN": "0123456789", 
                 "Password Siswa": "Sandi123", 
                 "Tempat Tanggal Lahir": "Jakarta, 10 Januari 2014", 
-                "Jenis Kelamin": "Laki-laki", // <--- DI SINI
+                "Jenis Kelamin": "Laki-laki", 
                 "Pilih Kelas": "Kelas 6A", 
                 "Status": "LULUS", 
                 "Link SKL": "https://drive.google.com/file/d/xxxx/view", 
@@ -725,9 +713,6 @@
             XLSX.writeFile(wb, "Template_Impor_Siswa.xlsx");
         });
 
-        // =====================================
-        // DISINI TAMBAHAN EKSPOR EXCEL
-        // =====================================
         document.getElementById('btnExport').addEventListener('click', function() {
             db.ref('siswa').once('value').then((snapshot) => {
                 const dataSiswa = snapshot.val();
@@ -741,7 +726,7 @@
                         "NISN": s.nisn, 
                         "Password Siswa": s.password, 
                         "Tempat Tanggal Lahir": s.ttl, 
-                        "Jenis Kelamin": s.jk || "-", // <--- DI SINI
+                        "Jenis Kelamin": s.jk || "-", 
                         "Pilih Kelas": s.kelas, 
                         "Status": s.status, 
                         "Link SKL": s.linkSKL, 
