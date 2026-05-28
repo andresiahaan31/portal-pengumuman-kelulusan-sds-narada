@@ -572,7 +572,7 @@
             refTarget.set(payload).then(() => {
                 closeModalSiswa();
                 loadDaftarSiswaAdmin();
-                showNotification(key ? "Data siswa berhasil diperbarui!" : "Siswa baru berhasil ditambahkan!");
+                showNotification(key ? "Berhasil diperbarui!" : "Berhasil ditambahkan!");
             });
         }
 
@@ -617,7 +617,7 @@
             const valWaktu = document.getElementById('cfgTargetWaktu').value;
             if(!valWaktu) return alert("Silakan tentukan tanggal dan jam terlebih dahulu!");
             db.ref('config/website').set({ targetWaktuString: valWaktu }).then(() => {
-                showNotification("Jadwal hitung mundur berhasil diperbarui!");
+                showNotification("Berhasil diperbarui!");
             });
         }
 
