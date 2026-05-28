@@ -18,16 +18,17 @@
         body { 
             font-family: 'Inter', sans-serif;
             color: #f8fafc;
+            /* Mengarah ke folder assets di GitHub */
+            background-image: url('assets/background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         .glass-card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(30, 41, 59, 0.75);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .gradient-bg {
-            background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 100%);
-        }
-        /* Custom scrollbar untuk tabel nilai admin */
         .custom-scroll::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -41,21 +42,20 @@
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
-    <nav class="w-full bg-slate-900/70 backdrop-blur-md border-b border-slate-800 px-6 py-4 fixed top-0 left-0 z-50 transition-all duration-300">
+    <nav class="w-full bg-slate-900/70 backdrop-blur-md border-b border-slate-800/50 px-6 py-4 fixed top-0 left-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-between p-1 shadow-inner animate__animated animate__fadeInLeft">
-                    <img src="https://i.ibb.co/6R0YgX4/logo-narada.png" alt="Logo SDS Narada" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=NARADA'">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1 shadow-md animate__animated animate__fadeInLeft">
+                    <img src="assets/logo-narada.png" alt="Logo SDS Narada" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=LOGO'">
                 </div>
                 <div class="animate__animated animate__fadeInRight">
-                    <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">SDS NARADA</h1>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Portal Pengumuman Kelulusan</p>
+                    <h1 class="text-xl font-black tracking-wider text-white">SDS NARADA</h1>
+                    <p class="text-xs font-semibold text-slate-300 uppercase tracking-widest">Portal Pengumuman Kelulusan</p>
                 </div>
             </div>
-            <button onclick="toggleAdminView()" id="btnAdminNav" class="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-white border border-slate-700 hover:border-slate-500 rounded-lg transition-all duration-200 shadow-sm flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <button onclick="toggleAdminView()" id="btnAdminNav" class="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-all duration-200 cursor-pointer">
                 Admin Panel
             </button>
         </div>
@@ -68,27 +68,34 @@
         </div>
     </div>
 
-    <main class="flex-grow pt-28 pb-12 px-4 flex items-center justify-center">
+    <main class="flex-grow pt-28 pb-12 px-4 flex flex-col items-center justify-center gap-8">
         
-        <div id="loginCard" class="w-full max-w-md glass-card rounded-2xl p-8 shadow-2xl animate__animated animate__fadeInUp">
-            <div class="text-center mb-8">
-                <div class="inline-flex p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20 mb-3">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <h2 class="text-2xl font-extrabold tracking-tight">Cek Kelulusan Anda</h2>
-                <p class="text-slate-400 text-sm mt-1">Masukkan data resmi Anda secara lengkap</p>
+        <div id="countdownCard" class="w-full max-w-xl glass-card rounded-3xl p-8 text-center shadow-2xl animate__animated animate__fadeInDown">
+            <img src="assets/logo-countdown.png" alt="Logo Countdown" class="w-20 h-20 mx-auto mb-4 object-contain" onerror="this.src='https://placehold.co/100x100?text=NARADA'">
+            <h2 class="text-xl font-extrabold tracking-tight text-white mb-6">Pengumuman Kelulusan Resmi Dibuka Dalam:</h2>
+            <div class="grid grid-cols-4 gap-3 text-center">
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50"><span id="cdHari" class="text-2xl font-black text-blue-400 font-mono">00</span><p class="text-[10px] text-slate-400 uppercase font-bold mt-1">Hari</p></div>
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50"><span id="cdJam" class="text-2xl font-black text-blue-400 font-mono">00</span><p class="text-[10px] text-slate-400 uppercase font-bold mt-1">Jam</p></div>
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50"><span id="cdMenit" class="text-2xl font-black text-blue-400 font-mono">00</span><p class="text-[10px] text-slate-400 uppercase font-bold mt-1">Menit</p></div>
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50"><span id="cdDetik" class="text-2xl font-black text-blue-400 font-mono">00</span><p class="text-[10px] text-slate-400 uppercase font-bold mt-1">Detik</p></div>
             </div>
+        </div>
 
+        <div id="loginCard" class="w-full max-w-md glass-card rounded-2xl p-8 shadow-2xl hidden animate__animated animate__fadeInUp">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-extrabold tracking-tight text-white">Cek Kelulusan Anda</h2>
+                <p class="text-slate-300 text-sm mt-1">Masukkan data resmi Anda secara lengkap</p>
+            </div>
             <div class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Nomor NISN Siswa</label>
-                    <input type="text" id="inputNisn" placeholder="Contoh: 0123456789" class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-600 tracking-widest">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Nomor NISN Siswa</label>
+                    <input type="text" id="inputNisn" placeholder="Contoh: 0123456789" class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none text-white tracking-widest">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Kata Sandi Rahasia</label>
-                    <input type="password" id="inputPassword" placeholder="••••••••" class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-600">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Kata Sandi Rahasia</label>
+                    <input type="password" id="inputPassword" placeholder="••••••••" class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none text-white">
                 </div>
-                <button onclick="prosesLoginSiswa()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.99] text-sm font-bold uppercase tracking-wider py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all duration-150 mt-2 cursor-pointer">
+                <button onclick="prosesLoginSiswa()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold uppercase tracking-wider py-4 rounded-xl shadow-lg transition-all duration-150 mt-2 cursor-pointer">
                     Periksa Status Kelulusan
                 </button>
             </div>
@@ -97,36 +104,33 @@
         <div id="resultCard" class="w-full max-w-4xl glass-card rounded-3xl p-6 md:p-8 shadow-2xl hidden animate__animated animate__fadeIn">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-700 pb-6 mb-6">
                 <div>
-                    <span class="inline-block px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold rounded-full border border-blue-500/20 uppercase tracking-widest mb-2" id="resKelas">Kelas VI-A</span>
-                    <h2 class="text-2xl md:text-3xl font-black tracking-tight" id="resNama">NAMA LENGKAP SISWA</h2>
-                    <p class="text-sm text-slate-400 mt-1 font-medium">NISN: <span id="resNisn" class="tracking-widest font-mono text-slate-300"></span> | NIS: <span id="resNis" class="font-mono text-slate-300"></span></p>
-                    <p class="text-xs text-slate-500 mt-1 font-medium" id="resTtl">Tempat, Tanggal Lahir</p>
+                    <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-bold rounded-full border border-blue-500/30 uppercase tracking-widest mb-2" id="resKelas">Kelas VI</span>
+                    <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white" id="resNama">NAMA SISWA</h2>
+                    <p class="text-sm text-slate-300 mt-1 font-medium">NISN: <span id="resNisn" class="tracking-widest font-mono text-white"></span> | NIS: <span id="resNis" class="font-mono text-white"></span></p>
+                    <p class="text-xs text-slate-400 mt-1 font-medium" id="resTtl">Tempat, Tanggal Lahir</p>
                 </div>
                 <div class="text-left md:text-right">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Status Akhir</p>
-                    <div id="badgeStatus" class="inline-block text-xl font-black uppercase tracking-wider px-6 py-2.5 rounded-2xl shadow-md border animate__animated">
+                    <p class="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Status Akhir</p>
+                    <div id="badgeStatus" class="inline-block text-xl font-black uppercase tracking-wider px-6 py-2.5 rounded-2xl shadow-md border">
                         STATUS
                     </div>
                 </div>
             </div>
 
-            <div class="mb-8 p-4 rounded-2xl border bg-slate-900/40 text-sm leading-relaxed" id="pesanPengumuman"></div>
+            <div class="mb-8 p-4 rounded-2xl border text-sm leading-relaxed" id="pesanPengumuman"></div>
 
             <div class="mb-8">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Daftar Nilai Ujian Sekolah (Asli)
-                </h3>
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-widest mb-4">Daftar Nilai Ujian Sekolah</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5" id="gridNilai">
                     </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-end gap-3.5 pt-4 border-t border-slate-800">
-                <button onclick="kembaliKeLogin()" class="w-full sm:w-auto px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer">
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-3.5 pt-4 border-t border-slate-700">
+                <button onclick="kembaliKeLogin()" class="w-full sm:w-auto px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer">
                     Kembali Ke Beranda
                 </button>
                 
-                <a id="btnDownloadSKL" target="_blank" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                <a id="btnDownloadSKL" target="_blank" class="w-full sm:w-auto px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Unduh Dokumen SKL
                 </a>
@@ -134,15 +138,14 @@
         </div>
 
         <div id="adminCard" class="w-full max-w-5xl glass-card rounded-3xl p-6 md:p-8 shadow-2xl hidden animate__animated animate__fadeIn">
-            
             <div id="adminLoginSection" class="max-w-md mx-auto py-8 hidden">
                 <div class="text-center mb-6">
-                    <h2 class="text-2xl font-black tracking-tight text-indigo-400">Otentikasi Administrator</h2>
-                    <p class="text-slate-400 text-xs mt-1">Masukkan kode keamanan panel admin</p>
+                    <h2 class="text-2xl font-black tracking-tight text-white">Otentikasi Administrator</h2>
+                    <p class="text-slate-300 text-xs mt-1">Masukkan kode keamanan panel admin</p>
                 </div>
                 <div class="space-y-4">
-                    <input type="password" id="adminPassword" placeholder="Sandi Keamanan Admin" class="w-full bg-slate-900/50 border border-slate-700 focus:border-indigo-500 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
-                    <button onclick="prosesLoginAdmin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-sm font-bold uppercase tracking-wider py-3.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all cursor-pointer">
+                    <input type="password" id="adminPassword" placeholder="Sandi Keamanan Admin" class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3.5 text-sm font-medium text-white focus:outline-none">
+                    <button onclick="prosesLoginAdmin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold uppercase tracking-wider py-3.5 rounded-xl shadow-lg transition-all cursor-pointer">
                         Buka Akses Kontrol
                     </button>
                 </div>
@@ -151,43 +154,29 @@
             <div id="adminDashboardSection" class="hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700 pb-5 mb-6">
                     <div>
-                        <h2 class="text-2xl font-black tracking-tight text-indigo-400">Dashboard Kontrol Admin</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Kelola data siswa kelulusan dan ekspor laporan</p>
+                        <h2 class="text-2xl font-black tracking-tight text-white">Dashboard Kontrol Admin</h2>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="eksporDataKeExcel()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <button onclick="eksporDataKeExcel()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer">
                             Ekspor Excel (XLSX)
                         </button>
-                        <button onclick="logoutAdmin()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer">
+                        <button onclick="logoutAdmin()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer">
                             Keluar Panel
                         </button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Data</p>
-                        <h4 class="text-2xl font-black mt-1 text-slate-200" id="statTotal">0</h4>
-                    </div>
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <p class="text-emerald-500/80 text-xs font-bold uppercase tracking-wider">Siswa Lulus</p>
-                        <h4 class="text-2xl font-black mt-1 text-emerald-400" id="statLulus">0</h4>
-                    </div>
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <p class="text-red-500/80 text-xs font-bold uppercase tracking-wider">Tidak Lulus</p>
-                        <h4 class="text-2xl font-black mt-1 text-red-400" id="statTidakLulus">0</h4>
-                    </div>
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <p class="text-blue-500/80 text-xs font-bold uppercase tracking-wider">Memiliki SKL</p>
-                        <h4 class="text-2xl font-black mt-1 text-blue-400" id="statSkl">0</h4>
-                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50"><p class="text-slate-400 text-xs font-bold uppercase">Total Data</p><h4 class="text-2xl font-black mt-1 text-white" id="statTotal">0</h4></div>
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50"><p class="text-emerald-400 text-xs font-bold uppercase">Siswa Lulus</p><h4 class="text-2xl font-black mt-1 text-emerald-400" id="statLulus">0</h4></div>
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50"><p class="text-red-400 text-xs font-bold uppercase">Tidak Lulus</p><h4 class="text-2xl font-black mt-1 text-red-400" id="statTidakLulus">0</h4></div>
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50"><p class="text-blue-400 text-xs font-bold uppercase">Memiliki SKL</p><h4 class="text-2xl font-black mt-1 text-blue-400" id="statSkl">0</h4></div>
                 </div>
 
-                <div class="w-full overflow-x-auto custom-scroll border border-slate-800 rounded-xl bg-slate-900/30">
+                <div class="w-full overflow-x-auto custom-scroll border border-slate-700 rounded-xl bg-slate-900/30">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead>
-                            <tr class="bg-slate-900/80 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800">
+                            <tr class="bg-slate-900/80 text-slate-300 font-bold uppercase border-b border-slate-700">
                                 <th class="px-4 py-3">No</th>
                                 <th class="px-4 py-3">Nama Lengkap</th>
                                 <th class="px-4 py-3">NISN / NIS</th>
@@ -197,28 +186,25 @@
                                 <th class="px-4 py-3">Link SKL</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTableBody" class="divide-y divide-slate-800 text-slate-300 font-medium">
-                            </tbody>
+                        <tbody id="adminTableBody" class="divide-y divide-slate-800 text-slate-300 font-medium"></tbody>
                     </table>
                 </div>
             </div>
-
         </div>
 
     </main>
 
-    <footer class="w-full text-center py-4 border-t border-slate-900 bg-slate-950/40 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-        &copy; 2026 SDS NARADA. All Rights Reserved. Designed for Excellence.
+    <footer class="w-full text-center py-4 border-t border-slate-800 bg-slate-950/20 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        &copy; 2026 Administrator Pengumuman Kelulusan SDS Narada
     </footer>
 
     <script>
         // ==========================================
-        // ⚙️ PENGATURAN AKSES ADMIN (TOGGLE SKL)
+        // ⚙️ SAKLAR ADMIN: ON / OFF TOMBOL DOWNLOAD SKL
         // ==========================================
-        // Ubah true untuk menampilkan, false untuk menyembunyikan (disable konsep).
-        const TAMPILKAN_TOMBOL_SKL = false; 
+        const SAKLAR_DOWNLOAD_SKL = false; 
 
-        // KONFIGURASI DATABASE FIREBASE ASLI ANDA
+        // KONFIGURASI DATABASE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAs-REAL-API-KEY-ANDA",
             authDomain: "sds-narada-graduation.firebaseapp.com",
@@ -227,7 +213,6 @@
             storageBucket: "sds-narada-graduation.appspot.com"
         };
         
-        // Inisialisasi Aplikasi Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -236,7 +221,33 @@
         let currentView = "siswa"; 
         let isAdminAuthenticated = false;
 
-        // SISTEM NOTIFIKASI TOAST CUSTOM
+        const waktuPengumuman = new Date("June 2, 2026 10:00:00").getTime();
+
+        const x = setInterval(function() {
+            const sekarang = new Date().getTime();
+            const selisih = waktuPengumuman - sekarang;
+
+            const hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
+            const jam = Math.floor((selisih % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const menit = Math.floor((selisih % (1000 * 60 * 60)) / (1000 * 60));
+            const detik = Math.floor((selisih % (1000 * 60)) / 1000);
+
+            document.getElementById("cdHari").innerText = hari < 10 ? "0" + hari : hari;
+            document.getElementById("cdJam").innerText = jam < 10 ? "0" + jam : jam;
+            document.getElementById("cdMenit").innerText = menit < 10 ? "0" + menit : menit;
+            document.getElementById("cdDetik").innerText = detik < 10 ? "0" + detik : detik;
+
+            if (selisih < 0) {
+                clearInterval(x);
+                document.getElementById("countdownCard").classList.add("hidden");
+                if(currentView === "siswa" && document.getElementById("resultCard").classList.contains("hidden")) {
+                    document.getElementById("loginCard").classList.remove("hidden");
+                }
+            } else {
+                document.getElementById("loginCard").classList.add("hidden");
+            }
+        }, 1000);
+
         function showNotification(message, type = "success") {
             const toast = document.getElementById('notification');
             const bg = document.getElementById('toastBg');
@@ -253,57 +264,40 @@
 
             msg.innerText = message;
             toast.classList.remove('opacity-0', 'translate-x-80', 'pointer-events-none');
-            
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-x-80', 'pointer-events-none');
-            }, 3500);
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-x-80', 'pointer-events-none'); }, 3500);
         }
 
-        // LOGIKA PROSES LOGIN & VALIDASI SISWA
         function prosesLoginSiswa() {
             const nisn = document.getElementById('inputNisn').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
 
-            if (!nisn || !password) {
-                return showNotification("Harap lengkapi NISN dan Kata Sandi Anda!", "error");
-            }
+            if (!nisn || !password) return showNotification("Lengkapi NISN dan Password!", "error");
 
             db.ref('siswa/' + nisn).once('value').then((snapshot) => {
-                if (!snapshot.exists()) {
-                    return showNotification("Nomor NISN tidak terdaftar di sistem!", "error");
-                }
+                if (!snapshot.exists()) return showNotification("NISN tidak terdaftar!", "error");
 
                 const siswa = snapshot.val();
-                if (siswa.password !== password) {
-                    return showNotification("Kata sandi yang Anda masukkan salah!", "error");
-                }
+                if (siswa.password !== password) return showNotification("Password Salah!", "error");
 
-                showNotification("Berhasil! Membuka berkas kelulusan...");
+                showNotification("Membuka berkas kelulusan...");
                 tampilkanDashboardHasilSiswa(siswa, nisn);
-            }).catch((err) => {
-                showNotification("Terjadi kendala koneksi server database!", "error");
-            });
+            }).catch(() => { showNotification("Kendala koneksi database!", "error"); });
         }
 
-        // FORMAT TAMPILAN NILAI JIKA APABILA KOSONG / NOL
         function formatNilaiTampil(nilai) {
-            if (nilai === undefined || nilai === null || nilai === "") return "-";
-            return nilai;
+            return (nilai === undefined || nilai === null || nilai === "") ? "-" : nilai;
         }
 
-        // MENAMPILKAN DATA HASIL KELULUSAN & TRANSKRIP NILAI
         function tampilkanDashboardHasilSiswa(siswa, nisn) {
             document.getElementById('loginCard').classList.add('hidden');
             const resultCard = document.getElementById('resultCard');
             
-            // Atur Informasi Teks
             document.getElementById('resNama').innerText = siswa.nama.toUpperCase();
             document.getElementById('resNis').innerText = siswa.nis || "-";
             document.getElementById('resNisn').innerText = nisn;
             document.getElementById('resKelas').innerText = "Kelas " + (siswa.kelas || "VI");
-            document.getElementById('resTtl').innerText = siswa.ttl || "Tempat, Tanggal Lahir tidak diatur";
+            document.getElementById('resTtl').innerText = siswa.ttl || "-";
 
-            // Atur Badge Kelulusan
             const badge = document.getElementById('badgeStatus');
             const pesanBox = document.getElementById('pesanPengumuman');
             
@@ -311,24 +305,19 @@
                 badge.innerText = "LULUS";
                 badge.className = "inline-block text-xl font-black uppercase tracking-wider px-6 py-2.5 rounded-2xl shadow-md border bg-emerald-500/10 text-emerald-400 border-emerald-500/30 animate__animated animate__pulse animate__infinite";
                 pesanBox.className = "mb-8 p-5 rounded-2xl border bg-emerald-950/20 border-emerald-500/20 text-emerald-200 text-sm leading-relaxed";
-                pesanBox.innerHTML = `🎉 <strong>Selamat!</strong> Berdasarkan kriteria kelulusan satuan pendidikan SDS Narada Tahun Pelajaran 2025/2026, Anda dinyatakan memenuhi seluruh syarat dan resmi <strong>LULUS</strong>. Pertahankan prestasimu di jenjang berikutnya!`;
+                pesanBox.innerHTML = `🎉 <strong>Selamat!</strong> Anda dinyatakan resmi <strong>LULUS</strong> dari satuan pendidikan SDS Narada.`;
             } else {
                 badge.innerText = "TIDAK LULUS";
                 badge.className = "inline-block text-xl font-black uppercase tracking-wider px-6 py-2.5 rounded-2xl shadow-md border bg-rose-500/10 text-rose-400 border-rose-500/30";
                 pesanBox.className = "mb-8 p-5 rounded-2xl border bg-rose-950/20 border-rose-500/20 text-rose-200 text-sm leading-relaxed";
-                pesanBox.innerHTML = `⚠️ <strong>Pemberitahuan:</strong> Berdasarkan keputusan rapat dewan guru SDS Narada, Anda dinyatakan <strong>TIDAK LULUS</strong>. Harap segera menghubungi wali kelas atau pihak administrasi sekolah untuk informasi tindak lanjut.`;
+                pesanBox.innerHTML = `⚠️ Anda dinyatakan <strong>TIDAK LULUS</strong>. Silakan hubungi wali kelas Anda.`;
             }
 
-            // Render Transkrip Grid Nilai Mapel
             const mapelList = [
-                { id: "Agama", val: siswa.nilai?.agama },
-                { id: "PPKn", val: siswa.nilai?.ppkn },
-                { id: "B. Indo", val: siswa.nilai?.indonesia },
-                { id: "Matematika", val: siswa.nilai?.matematika },
-                { id: "IPA", val: siswa.nilai?.ipa },
-                { id: "IPS", val: siswa.nilai?.ips },
-                { id: "SBdP", val: siswa.nilai?.sbdp },
-                { id: "PJOK", val: siswa.nilai?.pjok },
+                { id: "Agama", val: siswa.nilai?.agama }, { id: "PPKn", val: siswa.nilai?.ppkn },
+                { id: "B. Indo", val: siswa.nilai?.indonesia }, { id: "Matematika", val: siswa.nilai?.matematika },
+                { id: "IPA", val: siswa.nilai?.ipa }, { id: "IPS", val: siswa.nilai?.ips },
+                { id: "SBdP", val: siswa.nilai?.sbdp }, { id: "PJOK", val: siswa.nilai?.pjok },
                 { id: "B. Inggris", val: siswa.nilai?.inggris }
             ];
 
@@ -336,16 +325,15 @@
             gridNilai.innerHTML = "";
             mapelList.forEach(m => {
                 gridNilai.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 p-3.5 rounded-xl text-center shadow-inner">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate mb-1">${m.id}</p>
+                    <div class="bg-slate-900/60 border border-slate-700/50 p-3.5 rounded-xl text-center shadow-inner">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate mb-1">${m.id}</p>
                         <h5 class="text-xl font-black text-blue-400 font-mono">${formatNilaiTampil(m.val)}</h5>
                     </div>
                 `;
             });
 
-            // --- SELEKSI TOGGLE DOWNLOAD SKL (KONSEP DISABLE ADMIN) ---
             const btnSKL = document.getElementById('btnDownloadSKL');
-            if (TAMPILKAN_TOMBOL_SKL && siswa.linkSKL && siswa.linkSKL.trim() !== "") {
+            if (SAKLAR_DOWNLOAD_SKL && siswa.linkSKL && siswa.linkSKL.trim() !== "") {
                 btnSKL.style.display = 'inline-flex';
                 btnSKL.href = siswa.linkSKL;
             } else {
@@ -358,17 +346,22 @@
 
         function kembaliKeLogin() {
             document.getElementById('resultCard').classList.add('hidden');
-            document.getElementById('loginCard').classList.remove('hidden');
+            const sekarang = new Date().getTime();
+            if (waktuPengumuman - sekarang < 0) {
+                document.getElementById('loginCard').classList.remove('hidden');
+            } else {
+                document.getElementById("countdownCard").classList.remove("hidden");
+            }
             document.getElementById('inputPassword').value = "";
         }
 
-        // CONTROL VIEW: NAVIGASI ANTARA ADMIN PANEL DAN SISWA
         function toggleAdminView() {
             const btn = document.getElementById('btnAdminNav');
             if (currentView === "siswa") {
                 currentView = "admin";
-                btn.innerText = "Halaman Siswa";
+                btn.innerText = "Halaman Beranda";
                 document.getElementById('loginCard').classList.add('hidden');
+                document.getElementById('countdownCard').classList.add('hidden');
                 document.getElementById('resultCard').classList.add('hidden');
                 document.getElementById('adminCard').classList.remove('hidden');
                 
@@ -383,40 +376,35 @@
                 currentView = "siswa";
                 btn.innerText = "Admin Panel";
                 document.getElementById('adminCard').classList.add('hidden');
-                document.getElementById('loginCard').classList.remove('hidden');
+                const sekarang = new Date().getTime();
+                if (waktuPengumuman - sekarang < 0) {
+                    document.getElementById('loginCard').classList.remove('hidden');
+                } else {
+                    document.getElementById('countdownCard').classList.remove('hidden');
+                }
             }
         }
 
-        // VALIDASI KEAMANAN LOGIN KONTROL ADMIN
         function prosesLoginAdmin() {
             const pass = document.getElementById('adminPassword').value;
-            // Password bawaan sistem Anda adalah 'adminnarada2026'
-            if (pass === "adminnarada2026") {
+            if (pass === "Narada12345_") {
                 isAdminAuthenticated = true;
-                showNotification("Otentikasi admin berhasil dipasang!");
+                showNotification("Login Berhasil!");
                 document.getElementById('adminLoginSection').classList.add('hidden');
                 document.getElementById('adminDashboardSection').classList.remove('hidden');
                 initAdminLiveDashboard();
             } else {
-                showNotification("Sandi akses admin keliru!", "error");
+                showNotification("Password salah!", "error");
             }
         }
 
-        // MEMUAT REAL-TIME MONITORING TABEL UTAMA ADMIN
         function initAdminLiveDashboard() {
             db.ref('siswa').on('value', (snapshot) => {
                 const dataSiswa = snapshot.val();
                 const tbody = document.getElementById('adminTableBody');
                 tbody.innerHTML = "";
 
-                if (!dataSiswa) {
-                    document.getElementById('statTotal').innerText = "0";
-                    document.getElementById('statLulus').innerText = "0";
-                    document.getElementById('statTidakLulus').innerText = "0";
-                    document.getElementById('statSkl').innerText = "0";
-                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-500 italic">Belum ada data siswa terunggah di database</td></tr>`;
-                    return;
-                }
+                if (!dataSiswa) return;
 
                 let total = 0, lulus = 0, tidakLulus = 0, sklCount = 0;
                 
@@ -430,19 +418,19 @@
                     if (hasSkl) sklCount++;
 
                     tbody.innerHTML += `
-                        <tr class="hover:bg-slate-900/40 transition-colors">
-                            <td class="px-4 py-3 font-mono text-slate-500">${total}</td>
-                            <td class="px-4 py-3 font-bold text-slate-200">${s.nama || "-"}</td>
-                            <td class="px-4 py-3 font-mono text-xs text-slate-400">${key} / ${s.nis || "-"}</td>
-                            <td class="px-4 py-3 font-mono text-slate-400">${s.password || "-"}</td>
-                            <td class="px-4 py-3"><span class="px-2 py-0.5 bg-slate-800 rounded text-[10px]">${s.kelas || "VI"}</span></td>
+                        <tr class="hover:bg-slate-900/40">
+                            <td class="px-4 py-3 font-mono text-slate-400">${total}</td>
+                            <td class="px-4 py-3 font-bold text-white">${s.nama || "-"}</td>
+                            <td class="px-4 py-3 font-mono text-slate-300">${key} / ${s.nis || "-"}</td>
+                            <td class="px-4 py-3 font-mono text-slate-300">${s.password || "-"}</td>
+                            <td class="px-4 py-3">${s.kelas || "VI"}</td>
                             <td class="px-4 py-3 text-center">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isLulus ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isLulus ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
                                     ${s.status || "TIDAK LULUS"}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 max-w-[160px] truncate font-mono text-[10px] text-blue-400">
-                                ${hasSkl ? `<a href="${s.linkSKL}" target="_blank" class="hover:underline">Buka Berkas 🔗</a>` : '<span class="text-slate-600">Kosong</span>'}
+                            <td class="px-4 py-3 font-mono text-[10px] text-blue-400">
+                                ${hasSkl ? `<a href="${s.linkSKL}" target="_blank">Buka Berkas 🔗</a>` : 'Kosong'}
                             </td>
                         </tr>
                     `;
@@ -455,7 +443,6 @@
             });
         }
 
-        // EKSPOR DATA REALTIME KE LAPORAN EXCEL (SHEETJS)
         function eksporDataKeExcel() {
             db.ref('siswa').once('value').then((snapshot) => {
                 const dataSiswa = snapshot.val();
@@ -465,23 +452,12 @@
                 Object.keys(dataSiswa).forEach(k => {
                     const s = dataSiswa[k];
                     out.push({
-                        "Nama Siswa": s.nama, 
-                        "NIS": s.nis, 
-                        "NISN": k, 
-                        "Password Siswa": s.password, 
-                        "Tempat Tanggal Lahir": s.ttl, 
-                        "Pilih Kelas": s.kelas, 
-                        "Status": s.status, 
-                        "Link SKL": s.linkSKL, 
-                        "Agama": formatNilaiTampil(s.nilai?.agama), 
-                        "PPKn": formatNilaiTampil(s.nilai?.ppkn), 
-                        "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), 
-                        "Matematika": formatNilaiTampil(s.nilai?.matematika), 
-                        "IPA": formatNilaiTampil(s.nilai?.ipa), 
-                        "IPS": formatNilaiTampil(s.nilai?.ips), 
-                        "SBdP": formatNilaiTampil(s.nilai?.sbdp), 
-                        "PJOK": formatNilaiTampil(s.nilai?.pjok), 
-                        "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
+                        "Nama Siswa": s.nama, "NIS": s.nis, "NISN": k, "Password Siswa": s.password, 
+                        "Tempat Tanggal Lahir": s.ttl, "Pilih Kelas": s.kelas, "Status": s.status, "Link SKL": s.linkSKL, 
+                        "Agama": formatNilaiTampil(s.nilai?.agama), "PPKn": formatNilaiTampil(s.nilai?.ppkn), 
+                        "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), "Matematika": formatNilaiTampil(s.nilai?.matematika), 
+                        "IPA": formatNilaiTampil(s.nilai?.ipa), "IPS": formatNilaiTampil(s.nilai?.ips), 
+                        "SBdP": formatNilaiTampil(s.nilai?.sbdp), "PJOK": formatNilaiTampil(s.nilai?.pjok), "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
                     });
                 });
                 
@@ -489,7 +465,7 @@
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Rekap Kelulusan");
                 XLSX.writeFile(wb, "REKAP_KELULUSAN_SDS_NARADA.xlsx");
-                showNotification("Laporan Excel berhasil diunduh!");
+                showNotification("Excel berhasil diunduh!");
             });
         }
 
