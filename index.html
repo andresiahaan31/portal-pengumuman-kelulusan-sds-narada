@@ -325,16 +325,43 @@
                 
                 <div class="border-t border-slate-100 pt-4">
                     <h4 class="text-xs font-bold text-slate-800 mb-3">Nilai Ujian Sekolah:</h4>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-slate-400">Agama</label><input type="text" id="n_agama" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">PPKn</label><input type="text" id="n_ppkn" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">B. Indo</label><input type="text" id="n_indo" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">MTK</label><input type="text" id="n_mtk" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">IPA</label><input type="text" id="n_ipa" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">IPS</label><input type="text" id="n_ips" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">SBdP</label><input type="text" id="n_sbdp" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">PJOK</label><input type="text" id="n_pjok" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
-                        <div><label class="text-[10px] text-slate-400">B. Inggris</label><input type="text" id="n_ing" class="w-full bg-slate-50 border p-2 text-xs rounded-lg border-slate-200" placeholder="0"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Pendidikan Agama dan Budi Pekerti</label>
+                            <input type="text" id="n_agama" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Pendidikan Pancasila dan Kewarganegaraan</label>
+                            <input type="text" id="n_ppkn" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Bahasa Indonesia</label>
+                            <input type="text" id="n_indo" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Matematika</label>
+                            <input type="text" id="n_mtk" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Ilmu Pengetahuan Alam</label>
+                            <input type="text" id="n_ipa" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Ilmu Pengetahuan Sosial</label>
+                            <input type="text" id="n_ips" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Seni Budaya dan Prakarya</label>
+                            <input type="text" id="n_sbdp" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Pendidikan Jasmani, Olahraga, dan Kesehatan</label>
+                            <input type="text" id="n_pjok" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 sm:col-span-2">
+                            <label class="text-[11px] text-slate-600 font-medium">Bahasa Inggris</label>
+                            <input type="text" id="n_ing" class="bg-slate-50 border p-1.5 w-16 text-center text-xs rounded-lg border-slate-200" placeholder="0">
+                        </div>
                     </div>
                 </div>
                 
@@ -361,7 +388,6 @@
             initCountdownEngine();
         });
 
-        // FUNGSI COUNTDOWN
         function initCountdownEngine() {
             if (countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(function() {
@@ -494,7 +520,7 @@
         }
 
         // ========================================================
-        // 🌟 PERUBAHAN UTAMA: RE-LAYOUT TAMPILAN HASIL KELULUSAN
+        // 🌟 PEMBARUAN LAYOUT HASIL DAN NAMA UTUH MATA PELAJARAN
         // ========================================================
         function renderHasilSiswaCard(s) {
             const resCard = document.getElementById('resultCard');
@@ -557,7 +583,7 @@
                             <div class="mt-2 text-xs text-blue-100/90 leading-relaxed font-medium">
                                 ${isLulus ? `
                                     <h4 class="text-sm font-bold text-emerald-300 mb-1">Selamat & Sukses!</h4>
-                                    <p>Perjuangan dan dedikasimu di membuahkan hasil yang membanggakan. Teruslah bermimpi setinggi langit dan jadilah kebanggaan bagi keluarga serta bangsa.</p>
+                                    <p>Perjuangan dan dedikasimu di SDS Narada membuahkan hasil yang membanggakan. Teruslah bermimpi setinggi langit dan jadilah kebanggaan bagi keluarga serta bangsa.</p>
                                 ` : `
                                     <h4 class="text-sm font-bold text-rose-300 mb-1">Tetap Semangat!</h4>
                                     <p>Jangan berkecil hati, ini bukanlah akhir dari segalanya. Setiap perjalanan memiliki rintangannya masing-masing. Teruslah berusaha dan pantang menyerah.</p>
@@ -573,42 +599,42 @@
                             Capaian Nilai Ujian Sekolah
                         </h3>
                         
-                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-9 gap-2">
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">Agama</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.agama)}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Pendidikan Agama dan Budi Pekerti</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.agama)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">PPKn</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ppkn)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Pendidikan Pancasila dan Kewarganegaraan</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.ppkn)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">B. Indo</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.indonesia)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Bahasa Indonesia</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.indonesia)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">MTK</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.matematika)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leader-tight">Matematika</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.matematika)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">IPA</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ipa)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Ilmu Pengetahuan Alam</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.ipa)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">IPS</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.ips)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Ilmu Pengetahuan Sosial</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.ips)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">SBdP</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.sbdp)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Seni Budaya dan Prakarya</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.sbdp)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">PJOK</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.pjok)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05]">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Pendidikan Jasmani, Olahraga, dan Kesehatan</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.pjok)}</div>
                             </div>
-                            <div class="bg-white/[0.03] p-2.5 rounded-xl border border-white/5 transition text-center">
-                                <div class="text-[10px] text-blue-200/60 font-medium truncate">B. Inggris</div>
-                                <div class="text-base font-bold text-white mt-0.5">${formatNilaiTampil(s.nilai?.inggris)}</div>
+                            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 transition hover:bg-white/[0.05] sm:col-span-2 lg:col-span-1">
+                                <div class="text-[11px] sm:text-xs text-blue-200/80 font-medium leading-tight">Bahasa Inggris</div>
+                                <div class="text-sm sm:text-base font-bold text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/10 shrink-0 min-w-[42px] text-center">${formatNilaiTampil(s.nilai?.inggris)}</div>
                             </div>
                         </div>
                     </div>
@@ -678,7 +704,7 @@
                     agama: document.getElementById('n_agama').value.trim() || "0",
                     ppkn: document.getElementById('n_ppkn').value.trim() || "0",
                     indonesia: document.getElementById('n_indo').value.trim() || "0",
-                    matematika: document.getElementById('n_mtk').value.trim() || "0",
+                    matematika: document.getElementById('m_mtk').value ? document.getElementById('m_mtk').value.trim() : (document.getElementById('n_mtk') ? document.getElementById('n_mtk').value.trim() : "0"),
                     ipa: document.getElementById('n_ipa').value.trim() || "0",
                     ips: document.getElementById('n_ips').value.trim() || "0",
                     sbdp: document.getElementById('n_sbdp').value.trim() || "0",
@@ -686,6 +712,12 @@
                     inggris: document.getElementById('n_ing').value.trim() || "0"
                 }
             };
+
+            // Proteksi double fallback ID jika m_mtk/n_mtk meleset
+            if(document.getElementById('n_mtk')) {
+                payload.nilai.matematika = document.getElementById('n_mtk').value.trim() || "0";
+            }
+
             const refTarget = key ? db.ref(`siswa/${key}`) : db.ref('siswa').push();
             refTarget.set(payload).then(() => {
                 closeModalSiswa();
@@ -714,7 +746,7 @@
                     document.getElementById('n_agama').value = formatNilaiTampil(s.nilai.agama);
                     document.getElementById('n_ppkn').value = formatNilaiTampil(s.nilai.ppkn);
                     document.getElementById('n_indo').value = formatNilaiTampil(s.nilai.indonesia);
-                    document.getElementById('n_mtk').value = formatNilaiTampil(s.nilai.matematika);
+                    if(document.getElementById('n_mtk')) document.getElementById('n_mtk').value = formatNilaiTampil(s.nilai.matematika);
                     document.getElementById('n_ipa').value = formatNilaiTampil(s.nilai.ipa);
                     document.getElementById('n_ips').value = formatNilaiTampil(s.nilai.ips);
                     document.getElementById('n_sbdp').value = formatNilaiTampil(s.nilai.sbdp);
@@ -747,6 +779,9 @@
             });
         }
 
+        // ========================================================
+        // 🌟 PERUBAHAN MANIFEST KOLOM EXCEL IMPOR
+        // ========================================================
         document.getElementById('uploadExcel').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(!file) return;
@@ -777,15 +812,15 @@
                                 status: String(row["Status"] || "LULUS").toUpperCase().trim(),
                                 linkSKL: String(row["Link SKL"] || "").trim(),
                                 nilai: {
-                                    agama: formatNilaiTampil(row["Agama"]),
-                                    ppkn: formatNilaiTampil(row["PPKn"]),
-                                    indonesia: formatNilaiTampil(row["B. Indonesia"]),
+                                    agama: formatNilaiTampil(row["Pendidikan Agama dan Budi Pekerti"]),
+                                    ppkn: formatNilaiTampil(row["Pendidikan Pancasila dan Kewarganegaraan"]),
+                                    indonesia: formatNilaiTampil(row["Bahasa Indonesia"]),
                                     matematika: formatNilaiTampil(row["Matematika"]),
-                                    ipa: formatNilaiTampil(row["IPA"]),
-                                    ips: formatNilaiTampil(row["IPS"]),
-                                    sbdp: formatNilaiTampil(row["SBdP"]),
-                                    pjok: formatNilaiTampil(row["PJOK"]),
-                                    inggris: formatNilaiTampil(row["B. Inggris"])
+                                    ipa: formatNilaiTampil(row["Ilmu Pengetahuan Alam"]),
+                                    ips: formatNilaiTampil(row["Ilmu Pengetahuan Sosial"]),
+                                    sbdp: formatNilaiTampil(row["Seni Budaya dan Prakarya"]),
+                                    pjok: formatNilaiTampil(row["Pendidikan Jasmani, Olahraga, dan Kesehatan"]),
+                                    inggris: formatNilaiTampil(row["Bahasa Inggris"])
                                 }
                             };
                             updates[newRef.key] = sData;
@@ -805,6 +840,9 @@
             reader.readAsArrayBuffer(file);
         });
 
+        // ========================================================
+        // 🌟 PERUBAHAN MANIFEST TEMPLATE UNDUH EXCEL
+        // ========================================================
         document.getElementById('btnDownloadTemplate').addEventListener('click', function() {
             const template = [{
                 "Nama Siswa": "Zack Ahmad", 
@@ -816,7 +854,15 @@
                 "Pilih Kelas": "Kelas 6A", 
                 "Status": "LULUS", 
                 "Link SKL": "https://drive.google.com/file/d/xxxx/view", 
-                "Agama": 90, "PPKn": 85, "B. Indonesia": 88, "Matematika": 95, "IPA": 92, "IPS": 86, "SBdP": 89, "PJOK": 90, "B. Inggris": 91
+                "Pendidikan Agama dan Budi Pekerti": 90, 
+                "Pendidikan Pancasila dan Kewarganegaraan": 85, 
+                "Bahasa Indonesia": 88, 
+                "Matematika": 95, 
+                "Ilmu Pengetahuan Alam": 92, 
+                "Ilmu Pengetahuan Sosial": 86, 
+                "Seni Budaya dan Prakarya": 89, 
+                "Pendidikan Jasmani, Olahraga, dan Kesehatan": 90, 
+                "Bahasa Inggris": 91
             }];
             const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
@@ -824,6 +870,9 @@
             XLSX.writeFile(wb, "Template_Impor_Siswa.xlsx");
         });
 
+        // ========================================================
+        // 🌟 PERUBAHAN MANIFEST KOLOM EKSPORT DATABASE EXCEL
+        // ========================================================
         document.getElementById('btnExport').addEventListener('click', function() {
             db.ref('siswa').once('value').then((snapshot) => {
                 const dataSiswa = snapshot.val();
@@ -841,15 +890,15 @@
                         "Pilih Kelas": s.kelas, 
                         "Status": s.status, 
                         "Link SKL": s.linkSKL, 
-                        "Agama": formatNilaiTampil(s.nilai?.agama), 
-                        "PPKn": formatNilaiTampil(s.nilai?.ppkn), 
-                        "B. Indonesia": formatNilaiTampil(s.nilai?.indonesia), 
+                        "Pendidikan Agama dan Budi Pekerti": formatNilaiTampil(s.nilai?.agama), 
+                        "Pendidikan Pancasila dan Kewarganegaraan": formatNilaiTampil(s.nilai?.ppkn), 
+                        "Bahasa Indonesia": formatNilaiTampil(s.nilai?.indonesia), 
                         "Matematika": formatNilaiTampil(s.nilai?.matematika), 
-                        "IPA": formatNilaiTampil(s.nilai?.ipa), 
-                        "IPS": formatNilaiTampil(s.nilai?.ips), 
-                        "SBdP": formatNilaiTampil(s.nilai?.sbdp), 
-                        "PJOK": formatNilaiTampil(s.nilai?.pjok), 
-                        "B. Inggris": formatNilaiTampil(s.nilai?.inggris)
+                        "Ilmu Pengetahuan Alam": formatNilaiTampil(s.nilai?.ipa), 
+                        "Ilmu Pengetahuan Sosial": formatNilaiTampil(s.nilai?.ips), 
+                        "Seni Budaya dan Prakarya": formatNilaiTampil(s.nilai?.sbdp), 
+                        "Pendidikan Jasmani, Olahraga, dan Kesehatan": formatNilaiTampil(s.nilai?.pjok), 
+                        "Bahasa Inggris": formatNilaiTampil(s.nilai?.inggris)
                     });
                 });
                 const ws = XLSX.utils.json_to_sheet(out);
